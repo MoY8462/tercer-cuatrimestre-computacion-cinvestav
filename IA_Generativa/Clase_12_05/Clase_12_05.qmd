@@ -1,0 +1,86 @@
+---
+title: "IA Generativa"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "05-14-2026"
+header-includes: |
+  \usepackage{xcolor}
+  \definecolor{myorange}{HTML}{9F27F5}
+  \usepackage{titlesec}
+  \titleformat{\section}{\normalfont\Large\bfseries\color{myorange}}{\thesection}{1em}{}
+  \titleformat{\subsection}{\normalfont\large\bfseries\color{myorange}}{\thesubsection}{1em}{}
+  \titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{myorange}}{\thesubsubsection}{1em}{}
+  \titleformat{\paragraph}{\normalfont\normalsize\bfseries\color{myorange}}{\theparagraph}{1em}{}
+format:
+  pdf: default
+---
+
+## Tomar cursos
+
+https://learn.deeplearning.ai/
+
+## Chapter one - Introduction to Data Mining, 2nd Edition
+
+### Large-scale Data is Everywhere
+
+* There has been enormous data growth in both commercial and scientific dabatabases due to advances in data generation and collection technologies
+* New mantra
+  * Gather whatever data you can whenever and wherever possible
+* Expectations
+  * Gathered data will have value ither for the purose collected or for a purpose not envisioned.
+
+
+### Why Data Mining? Commercial Viewpoint
+
+* Lots of data is being collected and warehoused
+  * Web data
+    * Yahoo has Peta Bytes of web data
+    * Facebook 
+  * purchase at department/grocery stores, e-commerce
+    * Amazon
+  * Bank/Credit Card transactions
+* Computers have become cheaper and more powerful
+* Competitive Pressure is Strong
+  * Provide better, customized services for an edge (e.g. in Customer Relationship Management)
+* Data collected stored at enormous speeds
+  * remote sensors on a satellite
+  * telescopes scanning the skies
+  * High-troughput biological data 
+  * scientific simulations
+* Data mining helps scientists
+  * in automated analysis of massive datasets
+  * in hypothesis information
+
+### Great Opportunities to Solve Society´s Major Problems
+
+- Improving health care and reducing costs
+- Predicting the impact of climate change
+- Finding alternative/ green energy sources
+- Reducing hunger and poverty by increasing agricultural productivity
+  
+### Why is Data Mining?
+
+* Many Definitions
+  * Non-trivial extraction of implicit, previously unknown and potentially useful information from data
+  * Exploration & analysis, by automatic or semiautomatic means, of large quantities of data in order to discover meaningful patterns
+
+### What is (not) Data Mining?
+
+### Origins of data mining
+
+* Draws ideas from machine learning/AI, pattern recognition, statistics, and databases systems
+
+* Traditional techniques may be unsuitable due to data that is
+  * Large-scale
+  * High-dimensional
+  * Heterogeneous
+  * Complex
+  * Distributed
+
+* A key component of the emerging field of data science and data-driven discrovery
+
+### Data Mining Tasks
+
+* Prediction Methods
+  * Use 
+  
+

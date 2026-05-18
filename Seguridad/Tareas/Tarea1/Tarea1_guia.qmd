@@ -1,0 +1,192 @@
+---
+title: "Seguridad"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "05-17-2026"
+---
+
+# SECCIÓN 1: Construcción del Sistema de Archivos Base (`smin`) y Dependencias
+
+En esta sección prepararemos el esqueleto del sistema operativo en el espacio de usuario utilizando **BusyBox**, mapeando de forma precisa sus dependencias de librerías dinámicas utilizando el enlazador de tu Debian anfitrión.
+
+### Paso 1.1: Inicialización del Entorno de Trabajo
+
+1. Abre tu terminal en el sistema Debian anfitrión.
+2. Navega a tu directorio de trabajo y crea el árbol de directorios limpio que cumple con el estándar de Linux (FHS):
+```bash
+cd ~/Docs/tex/Cursos/2026/Seguridad/
+mkdir -p smin/bin smin/dev smin/etc smin/lib smin/lib64 smin/sbin smin/usr/bin smin/usr/sbin smin/proc smin/sys
+
+```
+
+
+
+### Paso 1.2: Aprovisionamiento de BusyBox y Librerías Dinámicas
+
+Como pudimos observar en el rastreo de objetos cargados del Video 6 (`bin/ld-linux-x86-64.so.2 --list bin/busybox`), el ejecutable no es estático y requiere el enlazador y las librerías compartidas de tu Debian nativo.
+
+1. Copia el binario de **BusyBox** (que concentrará la Shell y comandos como `ls`, `cd`, `mkdir`) a la carpeta del proyecto:
+```bash
+cp /bin/busybox smin/bin/
+
+```
+
+
+2. Copia el enlazador dinámico de 64 bits al directorio correspondiente de la estructura:
+```bash
+cp /lib64/ld-linux-x86-64.so.2 smin/lib64/
+
+```
+
+
+3. Copia las librerías compartidas esenciales que el enlazador solicita para que BusyBox no truene al arrancar:
+```bash
+cp /lib/x86_64-linux-gnu/libc.so.6 smin/lib/
+cp /lib/x86_64-linux-gnu/libm.so.6 smin/lib/
+cp /lib/x86_64-linux-gnu/libresolv.so.2 smin/lib/
+
+```
+
+
+
+### Paso 1.3: Creación del Script de Inicialización Primaria (`init`)
+
+Cuando el núcleo de Linux termine de cargar en VirtualBox, buscará de forma predeterminada un ejecutable en la raíz llamado `init` para cederle el control del espacio de usuario.
+
+1. Crea y edita el archivo en la raíz de la carpeta `smin/`:
+```bash
+vi smin/init
+
+```
+
+
+2. Escribe el siguiente bloque de código para enlazar los comandos de BusyBox y montar los sistemas de archivos virtuales necesarios para la interacción con el hardware:
+```bash
+#!/bin/busybox sh
+
+# Crea los enlaces simbólicos de los comandos integrados de BusyBox (ls, cat, etc.)
+/bin/busybox --install -s
+
+# Monta los directorios de control del Kernel
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+
+echo "===================================================="
+echo " BIENVENIDO AL SISTEMA MÍNIMO RAM (smin) "
+echo " Tarea 1 - Inteligencia Artificial / Seguridad "
+echo "===================================================="
+
+# Invoca una Shell interactiva para el usuario
+exec /bin/sh
+
+```
+
+
+3. **Paso Crítico:** Otorga permisos de ejecución al script, de lo contrario el Kernel arrojará un error inmediato (*Kernel Panic*):
+```bash
+chmod +x smin/init
+
+```
+
+
+
+---
+
+# SECCIÓN 2: Empaquetado, Configuración de GRUB, Compilación de la ISO y VirtualBox
+
+En esta fase empaquetaremos el sistema `smin` en una imagen temporal de memoria RAM (`initramfs`), configuraremos el menú de GRUB paso a paso, generaremos la ISO y la desplegaremos.
+
+### Paso 2.1: Estructurar el Directorio de Construcción de la ISO
+
+La herramienta `grub-mkrescue` requiere una carpeta raíz independiente (llamada `iso`) donde buscará los archivos que formarán el CD-ROM bootable.
+
+1. Crea la estructura de carpetas de GRUB fuera del directorio `smin/`:
+```bash
+mkdir -p iso/boot/grub
+
+```
+
+
+
+### Paso 2.2: Generar la Imagen del Sistema de Archivos en RAM (`initramfs`)
+
+Comprime todo el contenido de tu carpeta `smin` utilizando un archivo de archivo `cpio` comprimido con `gzip`. Este archivo se almacenará directamente en la ruta de la ISO:
+
+```bash
+cd smin
+find . -print0 | cpio --null -ov --format=newc | gzip -9 > ../iso/boot/initrd.img
+cd ..
+
+```
+
+*Esto creará el archivo encapsulado `initrd.img` dentro de `iso/boot/`.*
+
+### Paso 2.3: Copiar el Núcleo y Modificar el Archivo `grub.cfg`
+
+1. Copia el archivo del núcleo ejecutable comprimido de tu sistema operativo Debian original hacia la carpeta de la ISO:
+```bash
+cp /boot/vmlinuz-5.10.0-32-amd64 iso/boot/
+
+```
+
+
+2. Crea y edita el archivo de configuración del menú de arranque:
+```bash
+vi iso/boot/grub/grub.cfg
+
+```
+
+
+3. Escribe las instrucciones exactas de arranque. Es **indispensable** utilizar el parámetro `rdinit=/init` para indicarle expresamente al núcleo que ejecute tu script personalizado instalado en la raíz de la RAM en lugar del `/sbin/init` tradicional de Debian:
+```text
+set default=0
+set timeout=7
+
+menuentry "smin Linux Mínimo (Kernel 5.10.0-32-amd64)" {
+    linux /boot/vmlinuz-5.10.0-32-amd64 rdinit=/init console=tty0
+    initrd /boot/initrd.img
+}
+
+```
+
+
+
+### Paso 2.4: Creación y Ejecución del Script de Compilación ISO (`haceImagen.sh`)
+
+Tal como se estructuró en el Video 3 y Video 5, crearemos un script para automatizar la invocación de `grub-mkrescue`.
+
+1. Crea el script en la raíz de tu carpeta de la práctica (`~/Docs/tex/Cursos/2026/Seguridad/`):
+```bash
+vi haceImagen.sh
+
+```
+
+
+2. Agrega la línea de comandos indicando los módulos de la arquitectura destino (`i386-pc`) examinados en el manual de GRUB:
+```bash
+grub-mkrescue -d /usr/lib/grub/i386-pc -o ImagenLinux.iso iso
+
+```
+
+
+3. Dale permisos de ejecución y corre el script:
+```bash
+chmod +x haceImagen.sh
+./haceImagen.sh
+
+```
+
+
+
+*Al finalizar el proceso con `xorriso`, se creará el archivo **`ImagenLinux.iso`** en tu directorio actual. Este archivo contiene únicamente tu núcleo copia de Debian, tus librerías filtradas y BusyBox.*
+
+### Paso 2.5: Configuración y Arranque en VirtualBox
+
+Lleva la ISO generada a la interfaz gráfica de tu gestor de máquinas virtuales:
+
+1. **Crear la VM:** Haz clic en *Nueva*. asígnale el nombre `smin_sistema`, Tipo: **Linux**, Versión: **Debian (64-bit)**. Asigna 2048 MB de memoria RAM.
+2. **Exclusión de Disco:** En el apartado de disco duro virtual, selecciona estrictamente **"No añadir un disco duro virtual"** (*Do not add a virtual hard disk*). Esto asegura que no dependa de un almacenamiento persistente y se ejecute 100% en la memoria RAM asignada.
+3. **Montar la Imagen ISO:** Ve a la *Configuración* de la VM recién creada -> *Almacenamiento*. Selecciona el dispositivo óptico que dice *Vacío*, haz clic en el icono del disco azul a la derecha y selecciona *Seleccionar un archivo de disco...*. Busca y carga tu archivo **`ImagenLinux.iso`**.
+4. **Arrancar:** Haz clic en *Iniciar*.
+
+VirtualBox cargará de inmediato el gestor de arranque que inyectó `grub-mkrescue`, te desplegará el menú del archivo `grub.cfg` que escribiste y, al presionar *Enter*, el núcleo de Linux se descomprimirá en memoria, montará tu archivo `initrd.img` y te otorgará el control de la consola Shell con el mensaje de bienvenida.

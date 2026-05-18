@@ -1,0 +1,50 @@
+---
+title: "Seguridad"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "13-05-2026"
+---
+
+Directorio proc, ¿qué es? 
+
+El directorio /proc es un sistema de archivos virtual (procfs) provisto por el kernel de Linux que expone información y control del kernel y de los procesos en forma de archivos y directorios. Puntos clave:
+
+* No está en disco; es dinámico y refleja el estado del kernel en tiempo real.
+* Contiene entradas por PID (/proc/<pid>) con info del proceso (cmdline, status, fd, etc.).
+* Archivos comunes: /proc/cpuinfo, /proc/meminfo, /proc/uptime, /proc/loadavg, /proc/modules.
+* /proc/sys ofrece parámetros del kernel que pueden leerse y, en muchos casos, modificarse (por ejemplo via sysctl).
+* Montado en el arranque (tipo proc); útil para diagnóstico y monitorización.
+* Precaución: escribir en /proc puede cambiar el comportamiento del sistema — hacerlo solo si sabes lo que haces.
+
+```
+# Ver información de la CPU
+cat /proc/cpuinfo
+
+# Ver memoria
+cat /proc/meminfo
+
+# Información del proceso actual
+ls -l /proc/$$
+cat /proc/$$/cmdline
+```
+
+## Modulos de red de virtual box
+
+* NAT
+* Interna
+
+
+<br>
+<div style="text-align:center">
+![Diagrama de clase.](Diagrama1.png){fig-cap="Figura 1: Diagrama de Internet" width="600px" fig-alt="Diagrama de clase."}
+</div>
+<br>
+
+<br>
+<div style="text-align:center">
+![Diagrama de clase.](Diagrama2.png){fig-cap="Figura 1: Diagrama de Internet" width="600px" fig-alt="Diagrama de clase."}
+</div>
+<br>
+
+### ¿Qué es virtio? 
+
+Virtio es un conjunto de dispositivos paravirtualizados y un framework de E/S para máquinas virtuales (principalmente KVM/QEMU) que ofrece interfaces estándar entre el invitado (guest) y el host para mejorar rendimiento frente a la emulación completa.

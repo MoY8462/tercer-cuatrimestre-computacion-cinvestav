@@ -1,0 +1,56 @@
+---
+title: "Seguridad"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "11-05-2026"
+---
+
+```
+uname -a
+Darwin Moisess-MacBook-Air.local 24.6.0 Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:40 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T8132 arm64
+```
+
+### ¿Qué son micronúcleos?
+Los micronúcleos son una arquitectura de sistema operativo que se caracteriza por tener un núcleo mínimo que solo incluye las funciones esenciales para la gestión de recursos y la comunicación entre procesos. En lugar de incluir todas las funcionalidades en el núcleo, como en los sistemas operativos monolíticos, los micronúcleos delegan muchas de las funciones del sistema operativo a procesos de usuario o servidores que se ejecutan en espacio de usuario.
+
+**i386 grub** es un cargador de arranque (bootloader) que se utiliza para iniciar sistemas operativos en arquitecturas x86 (i386). Es parte del proyecto GNU GRUB (Grand Unified Bootloader) y es compatible con una amplia variedad de sistemas operativos, incluyendo Linux, Windows y otros sistemas basados en x86. GRUB permite a los usuarios seleccionar entre múltiples sistemas operativos instalados en el mismo equipo durante el proceso de arranque.
+
+¿Cómo puedo ver si tiene un grub instalado? 
+
+
+```
+menuentry
+```
+
+Tarea 1:
+1. Instalar VirtualBox en tu máquina.
+
+
+**uname -a** es un comando en sistemas operativos Unix y Linux que muestra información detallada sobre el sistema, incluyendo el nombre del kernel, la versión del kernel, el nombre del host, la arquitectura del procesador y otros detalles relacionados con el sistema operativo. Es útil para obtener información sobre el entorno en el que se está ejecutando el sistema operativo.
+
+El nucleo esta en **/boot/**
+
+Camos a crear el ambiente donde se ejecutará el linux
+
+Necesitamos 
+
+**busybox.net** que es un conjunto de herramientas de línea de comandos que proporciona una funcionalidad similar a la de los comandos tradicionales de Unix, pero en un paquete compacto. BusyBox es comúnmente utilizado en sistemas embebidos y entornos donde el espacio de almacenamiento es limitado.
+
+https://www.busybox.net/
+
+**make menuconfig**
+
+**ldd**
+
+**LD_DEBUG**
+
+bibliotecas que ocupa el comando ls
+
+- libc
+- libresolv
+- libm
+
+
+
+
+
+
