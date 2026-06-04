@@ -1,0 +1,47 @@
+---
+title: "HPC III"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "06-1-2026"
+header-includes: |
+  \usepackage{xcolor}
+  \definecolor{myorange}{HTML}{FF6600}
+  \usepackage{titlesec}
+  \titleformat{\section}{\normalfont\Large\bfseries\color{myorange}}{\thesection}{1em}{}
+  \titleformat{\subsection}{\normalfont\large\bfseries\color{myorange}}{\thesubsection}{1em}{}
+  \titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{myorange}}{\thesubsubsection}{1em}{}
+  \titleformat{\paragraph}{\normalfont\normalsize\bfseries\color{myorange}}{\theparagraph}{1em}{}
+format:
+  pdf: default
+---
+
+## x86 calling conventions
+
+## objdump
+
+## Criptografía
+
+1. Llave privada
+2. Llave pública
+
+La llave privada debe compartirse entre Bob y Alicia 
+
+**¿Qué significa encriptar?**
+Si alguien ve el mensaje que se transmite entre Bob y Alicia, no puede distinguir el mensaje del ruido.
+
+Si tenemos una secuencia de números aleatorios, otra secuencia que queremos proteger, hacemos un **XOR** entre los bits de la secuencia que queremos proteger y los bits aleatorios. Ñas estadísticas de la secuencia que queremos proteger toma las de la secuencia aleatoria.
+
+**NIST** - programa
+**TestU01** - biblioteca
+
+The Starndar Test Batteries
+
+- SmallCrush
+- Crush
+- BigCrush
+- Alphabit / Rabbit
+
+## Linux generate random bits
+
+`openssl rand -hex 16`
+
+``

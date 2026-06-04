@@ -1,0 +1,1 @@
+Memcached es un sistema de caché de objetos en memoria distribuida, de código abierto y de muy alto rendimiento. Su propósito principal es acelerar las aplicaciones web dinámicas aliviando la carga de trabajo de la base de datos.
