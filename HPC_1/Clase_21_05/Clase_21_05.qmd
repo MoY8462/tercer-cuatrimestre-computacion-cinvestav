@@ -525,3 +525,53 @@ Almacenadas en **múltiples** nodos y racks.
 Si el nodo, o el rack, falla el **impacto** en todo el sistema es **despreciable**.
 Los **Datanodes** almacenan y **procesan** los bloques de datos,
 Los **Namenodes** administran los DataNodes, guarda los **Metadatos** y controla los **accesos** de los clientes.
+
+De manera frecuente descarga el **fsimage** actual y los **logs** del NameNode y los **mezcla** con los que él tiene.
+
+El **fsimage** puede ser recuperado y **restaurado** 
+
+**DataNode:**
+Cada DataNode usa un proceso para almacenar el bloque 
+
+
+El Name Node mantiene la política de emplazamiento de bloque basa en racks:
+
+- La primera réplica es puesta en el mismo nodo que el cliente.
+- La segunda réplica es puesta en un aleatorio Datanode en un rack diferente.
+- La tercera réplica es puesta en un DataNode en el mismo rack donde se puso la segunda réplica.
+- La tercera réplica es puesta en un Datanode en el mismo rack donde se puso la segunda réplica.
+- Cualquier otra rélica adicional será opuesto en un DataNode aleatorio dentro del clúster
+
+Se mantiene solo una répica por nodo y limita a dos el número de réplicas por rack.
+La falla del rack es mucho menos común que la falla de nodo.
+Se asegura la confiabilidad, al almacenar al menos un bloque de datos en al menos un rack diferente
+
+## Yarn 
+
+Aún otro negociador de Recursos.
+
+Interactua intensivamente con la capa de almacenmiento y con el mecanismo de MApReduce
+
+Interactúa intensivamente con la capa de almacenamiento y con el mecanismo de MapReduce.
+
+Provee una interfaz genérica que permite implementar mecanismo de procesamiento para varios tipos de datos.
+
+### ResorceManager(RM)
+
+El demonio RM controla el uso de los recursos en el clúster Hadoop. Su propósito principal es asignar los recursos a las aplicaciones en los nodos esclavos.
+MAntiene una vista global de los procesos en ejecución y planeados. 
+Maneja las peticiones de recursos, candelariza y asigna los recursos conforme se necesiten (cubre perfiles)
+Se ejecuta en un nodo dedicado.
+Se enfoca principalmente en calendarizar cargas de trabajo. 
+No se ocupa de recuperación de fallas ni de tareas de procesamiento individuales. 
+Al ser un mecanismo independiente de las funciones de hadoop, es entonces un componente escalable.
+
+### Containers
+
+Los recursos de procesamiento en Hadoop están ubicados en contenedores. Un contenedor es genérico y puede ejecutar cualquier solicitud en los recursos de cualquier sistema.
+Si la cantidad de recurso solicitados es permitida, el RM lo aprueba y candelariza el container que va a ser empleado.
+El container trabaja en un nodo esclavo, que es asignado, monitoreado y rastreado por el NodeManager.
+
+**Funcionamiento de YARN:**
+
+El funcionamiento de YARN 
