@@ -1,0 +1,44 @@
+---
+title: "Internet"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "05-21-2026"
+header-includes: |
+  \usepackage{xcolor}
+  \definecolor{myorange}{HTML}{FF6600}
+  \usepackage{titlesec}
+  \titleformat{\section}{\normalfont\Large\bfseries\color{myorange}}{\thesection}{1em}{}
+  \titleformat{\subsection}{\normalfont\large\bfseries\color{myorange}}{\thesubsection}{1em}{}
+  \titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{myorange}}{\thesubsubsection}{1em}{}
+  \titleformat{\paragraph}{\normalfont\normalsize\bfseries\color{myorange}}{\theparagraph}{1em}{}
+format:
+  pdf: default
+---
+
+## Sistemas de información distribuidos para CI
+
+Retos de diseño.
+
+- Fiabilidad.
+    - Capacidad de un sistema para realizar satisfactoriamente la tarea para la que fue diseñado o previsto, durante un tiempo determiando y un entorno específico.
+- Escalabilidad.
+    - La capacidad de un sistema para dar cabida a un número creciente de elementos u objetos con el fin de gestionar volúmenes de trabajo cada vez mayores, y/o para ser susceptible de ampliación.
+- Seguridad. (Atributos de calidad)
+    - Confidencialidad.
+    - Integridad.
+    - Disponibilidad.
+- Integración
+    - El proceso de vincular física o funcionalmente distintos componentes para que el sistema pueda actuar como un todo coordinado.
+- Interoperabilidad
+    - Se refiere a la capacidad de dos o más redes, sistemas, dispositivos, aplicaciones o componentes para intercambiar y utilizar fácilmente la información de forma segura, eficaz y con pocos o ningún inconveniente para los usuarios.
+- Usabilidad
+    - Se conceptualiza popularmente en tres conceptos:
+        1. Eficacia: Se refiere a la capacidad de los usuarios para completar tareas utilizando el sistema, y la calidad del resultado de esas tareas.
+        2. Eficiencia: Es la relación entre la eficacia y la cantidad de esfuerzo necesario.
+        3. **Satisfacción: Se refiere a las reacciones subjetivas de los usuarios al utilizar el sistema.**      
+
+## Tarea 1
+
+Cuestionario unidad 1.
+
+
+
