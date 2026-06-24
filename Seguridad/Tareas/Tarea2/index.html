@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarea 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #0f1720;
+    --muted: #41918D;
+    --accent: #41918D;
+    --card: #f7fbfd;
+    --code-bg: #f7fbfd;
+    --accent-dark: #2d6b68;
+    --border: #c8e0de;
+    --border-light: #deeeed;
+    --text-light: #4d7a77;
+    --note-bg: #eef7f6;
+    --warn-bg: #fdf6e3;
+    --warn-border: #c9a227;
+    --warn-title: #7a5c00;
+    --max-width: 860px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.78;
+    color: var(--fg);
+    background: var(--bg);
+  }
+
+  header {
+    border-bottom: 2px solid var(--border);
+    background: var(--card);
+    padding: 2rem 1.5rem 1.6rem;
+  }
+  .header-inner { max-width: var(--max-width); margin: 0 auto; }
+  header h1 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.3;
+    margin-bottom: 1.1rem;
+  }
+  .meta-table {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.2rem 1rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  .meta-table .label { font-weight: 700; color: var(--fg); }
+  hr.title-rule { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0 0; }
+
+  .page-wrap { max-width: var(--max-width); margin: 0 auto; padding: 2.2rem 1.5rem 4rem; }
+
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.2rem 1.6rem;
+    margin-bottom: 2.8rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+  }
+  nav.toc h2 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+    font-weight: 700;
+    border: none; padding: 0;
+  }
+  nav.toc ol { padding-left: 1.3rem; }
+  nav.toc li { margin: 0.28rem 0; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  nav.toc ol ol { margin-top: 0.2rem; padding-left: 1.1rem; }
+
+  h2 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.4rem; font-weight: 700;
+    margin: 2.8rem 0 0.9rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+  }
+  h3 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.1rem; font-weight: 600;
+    margin: 2rem 0 0.65rem;
+    color: var(--fg);
+  }
+
+  p { margin-bottom: 1.05rem; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  a { color: var(--accent); }
+  ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+  ul li { margin-bottom: 0.35rem; }
+
+  code {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.83em;
+    background: var(--code-bg);
+    padding: 0.12em 0.42em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--accent-dark);
+  }
+
+  .code-wrap { margin: 1rem 0 1.7rem; }
+  .code-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #fff;
+    background: var(--accent);
+    display: inline-block;
+    padding: 0.22em 0.85em;
+    border-radius: 4px 4px 0 0;
+    font-weight: 500;
+  }
+  pre {
+    background: #0d1f1e;
+    color: #ceecea;
+    border-radius: 0 6px 6px 6px;
+    padding: 1.1rem 1.4rem;
+    overflow-x: auto;
+    font-size: 0.83rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: inherit; color: inherit; }
+  .kw  { color: #6ddbd6; }
+  .cm  { color: #4a8a86; font-style: italic; }
+  .st  { color: #a8d8b0; }
+  .fn  { color: #90c8f0; }
+  .op  { color: #7ec8c4; }
+
+  .callout {
+    border-left: 4px solid var(--warn-border);
+    background: var(--warn-bg);
+    padding: 0.85rem 1.2rem;
+    margin: 1.2rem 0 1.6rem;
+    border-radius: 0 5px 5px 0;
+    font-size: 0.95rem;
+  }
+  .callout.info { border-color: var(--accent); background: var(--note-bg); }
+  .callout-title {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+    color: var(--warn-title);
+  }
+  .callout.info .callout-title { color: var(--accent-dark); }
+
+  .tree {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.83rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.3rem;
+    line-height: 1.95;
+    margin: 0.8rem 0 1.5rem;
+  }
+  .tree .dir  { color: var(--accent); font-weight: 600; }
+  .tree .note { color: var(--text-light); font-style: italic; }
+
+  table { width: 100%; border-collapse: collapse; font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; margin: 1rem 0 1.8rem; }
+  th { background: var(--card); font-weight: 700; text-align: left; padding: 0.58rem 0.9rem; border: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg); }
+  td { padding: 0.55rem 0.9rem; border: 1px solid var(--border-light); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--card); }
+
+  kbd { font-family: 'Source Code Pro', monospace; font-size: 0.82em; background: var(--card); border: 1px solid var(--border); border-radius: 3px; padding: 0.1em 0.4em; }
+
+  .img-frame {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 1.2rem 0;
+    display: block;
+  }
+  .img-caption {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: -0.6rem;
+    margin-bottom: 1.6rem;
+    font-style: italic;
+  }
+  .img-placeholder {
+    width: 100%;
+    min-height: 200px;
+    background: var(--card);
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.2rem 0 0.4rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-light);
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.55rem 1.2rem;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 1.4rem 0 2rem;
+  }
+  .download-btn:hover { background: var(--accent-dark); color: #fff; }
+
+  footer { border-top: 1px solid var(--border); margin-top: 3rem; padding: 1.5rem; text-align: center; font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem; color: var(--text-light); }
+
+  @media (max-width: 600px) {
+    body { font-size: 15.5px; }
+    header h1 { font-size: 1.3rem; }
+    pre { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Tarea 2: Una puerta y una máquina cliente en una red interna.</h1>
+    <div class="meta-table">
+      <span class="label">Estudiante:</span><span>Moisés Alejandro Sánchez Vergara</span>
+      <span class="label">Profesor:</span><span>Dr. Luis Gerardo De la Fraga</span>
+      <span class="label">Institución:</span><span>Cinvestav-IPN (Zacatenco)</span>
+      <span class="label">Materia:</span><span>Seguridad en Sistemas de Información</span>
+      <span class="label">Fecha:</span><span>27 de mayo de 2026</span>
+    </div>
+    <hr class="title-rule">
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <nav class="toc">
+    <h2>Tabla de Contenidos</h2>
+    <ol>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#entorno">Entorno de Trabajo</a></li>
+      <li><a href="#arquitectura">Arquitectura de la Red</a></li>
+      <li><a href="#s1">Sección 1: Preparación del Entorno</a>
+        <ol>
+          <li><a href="#s1-1">Instalación de dependencias</a></li>
+          <li><a href="#s1-2">Estructura de directorios</a></li>
+          <li><a href="#s1-3">Librerías dinámicas y dispositivos</a></li>
+          <li><a href="#s1-4">Módulos virtio del kernel</a></li>
+          <li><a href="#s1-5">Instalación de BusyBox</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Sección 2: Configuración de los Sistemas Mínimos</a>
+        <ol>
+          <li><a href="#s2-1">Archivos de usuarios</a></li>
+          <li><a href="#s2-2">Script de arranque — Puerta (rc.sh)</a></li>
+          <li><a href="#s2-3">Script de arranque — Cliente (rc.sh)</a></li>
+          <li><a href="#s2-4">Configuración de GRUB</a></li>
+          <li><a href="#s2-5">Scripts de generación de ISOs</a></li>
+        </ol>
+      </li>
+      <li><a href="#s3">Sección 3: Despliegue en VirtualBox</a></li>
+      <li><a href="#s4">Sección 4: Pruebas y Resultados</a>
+        <ol>
+          <li><a href="#s4-1">Sistema mínimo Puerta — login</a></li>
+          <li><a href="#s4-2">Sistema mínimo Cliente — login</a></li>
+          <li><a href="#s4-3">Ping entre las dos máquinas</a></li>
+          <li><a href="#s4-4">Resolución de nombres desde la Puerta</a></li>
+        </ol>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- INTRO -->
+  <h2 id="intro">Introducción</h2>
+  <p>Esta tarea extiende el trabajo de la Tarea 1 —donde se construyó una imagen ISO arrancable con el kernel de Linux— incorporando un sistema de archivos raíz completo (<em>initrd</em>) empaquetado como imagen CPIO. Se construyen <strong>dos sistemas mínimos independientes</strong>: una <em>Puerta</em> que actúa como gateway NAT con dos tarjetas de red, y un <em>Cliente</em> conectado a la red interna privada.</p>
+  <p>El objetivo central es comprender la configuración de red a bajo nivel en Linux: carga de módulos de kernel, asignación de direcciones IP, enrutamiento y reenvío de paquetes (IP forwarding). Todo ello sin apoyarse en ninguna distribución preexistente ni en herramientas de configuración automática.</p>
+  <p>El sistema anfitrión es Debian 13 (Trixie) con kernel <code>6.12.90+deb13-amd64</code>. Se utiliza BusyBox v1.38.0 como userspace mínimo y módulos virtio para las tarjetas de red paravirtualizadas de VirtualBox.</p>
+
+  <!-- ENTORNO -->
+  <h2 id="entorno">Entorno de Trabajo</h2>
+  <table>
+    <thead><tr><th>Parámetro</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Sistema operativo anfitrión</td><td>Debian 13 (Trixie) — arquitectura x86_64</td></tr>
+      <tr><td>Versión del kernel</td><td><code>6.12.90+deb13-amd64</code></td></tr>
+      <tr><td>Ruta de trabajo</td><td><code>/home/moises-sanchez/Documentos/Seguridad_5</code></td></tr>
+      <tr><td>Herramienta de virtualización</td><td>Oracle VirtualBox</td></tr>
+      <tr><td>Userspace</td><td>BusyBox v1.38.0 (dinámico)</td></tr>
+      <tr><td>Adaptadores de red</td><td>Red paravirtualizada (virtio-net)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ARQUITECTURA -->
+  <h2 id="arquitectura">Arquitectura de la Red</h2>
+  <p>La topología consiste en dos máquinas virtuales comunicadas a través de una red interna de VirtualBox. La Puerta actúa como intermediario entre Internet (NAT) y la red privada donde reside el Cliente.</p>
+  <table>
+    <thead><tr><th>Máquina</th><th>Interfaz</th><th>Dirección IP</th><th>Función</th></tr></thead>
+    <tbody>
+      <tr><td>Puerta</td><td><code>eth0</code></td><td><code>10.0.2.15/24</code></td><td>NAT — acceso a Internet vía VirtualBox</td></tr>
+      <tr><td>Puerta</td><td><code>eth1</code></td><td><code>192.168.10.1/24</code></td><td>Gateway de la red interna</td></tr>
+      <tr><td>Cliente</td><td><code>eth0</code></td><td><code>192.168.10.2/24</code></td><td>Única interfaz, red interna</td></tr>
+      <tr><td>DNS Puerta</td><td>—</td><td><code>10.0.2.3</code></td><td>Servidor DNS del NAT de VirtualBox</td></tr>
+      <tr><td>DNS Cliente</td><td>—</td><td><code>192.168.10.1</code></td><td>La Puerta reenvía las consultas DNS</td></tr>
+    </tbody>
+  </table>
+
+  <!-- S1 -->
+  <h2 id="s1">Sección 1: Preparación del Entorno</h2>
+
+  <h3 id="s1-1">1.1 Instalación de dependencias</h3>
+  <p>Se instalan los paquetes necesarios en el sistema anfitrión para compilar BusyBox y generar las imágenes ISO arrancables:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">sudo</span> apt update
+<span class="fn">sudo</span> apt install grub-pc-bin xorriso build-essential libncurses-dev openssl</code></pre>
+  </div>
+
+  <h3 id="s1-2">1.2 Estructura de directorios</h3>
+  <p>Se crean los directorios base para ambos sistemas mínimos:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal — SMinPuerta</span>
+    <pre><code><span class="fn">mkdir</span> -p SMinPuerta/dev
+<span class="fn">mkdir</span> -p SMinPuerta/etc
+<span class="fn">mkdir</span> -p SMinPuerta/proc
+<span class="fn">mkdir</span> -p SMinPuerta/sys
+<span class="fn">mkdir</span> -p SMinPuerta/tmp
+<span class="fn">mkdir</span> -p SMinPuerta/mnt
+<span class="fn">mkdir</span> -p SMinPuerta/lib64
+<span class="fn">mkdir</span> -p SMinPuerta/lib/x86_64-linux-gnu
+<span class="fn">mkdir</span> -p SMinPuerta/lib/modules/6.12.90+deb13-amd64</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">terminal — SMinCliente</span>
+    <pre><code><span class="fn">mkdir</span> -p SMinCliente/dev
+<span class="fn">mkdir</span> -p SMinCliente/etc
+<span class="fn">mkdir</span> -p SMinCliente/proc
+<span class="fn">mkdir</span> -p SMinCliente/sys
+<span class="fn">mkdir</span> -p SMinCliente/tmp
+<span class="fn">mkdir</span> -p SMinCliente/mnt
+<span class="fn">mkdir</span> -p SMinCliente/lib64
+<span class="fn">mkdir</span> -p SMinCliente/lib/x86_64-linux-gnu
+<span class="fn">mkdir</span> -p SMinCliente/lib/modules/6.12.90+deb13-amd64</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">terminal — ISOs</span>
+    <pre><code><span class="fn">mkdir</span> -p iso_puerta/boot/grub
+<span class="fn">mkdir</span> -p iso_cliente/boot/grub</code></pre>
+  </div>
+  <p>La estructura resultante de cada sistema mínimo es:</p>
+  <div class="tree">
+    <span class="dir">SMinPuerta/</span><br>
+    &nbsp;&nbsp;├── <span class="dir">bin/</span> &nbsp;<span class="note">← BusyBox + symlinks</span><br>
+    &nbsp;&nbsp;├── <span class="dir">sbin/</span> &nbsp;<span class="note">← symlinks a BusyBox</span><br>
+    &nbsp;&nbsp;├── <span class="dir">dev/</span> &nbsp;<span class="note">← nodos de dispositivo</span><br>
+    &nbsp;&nbsp;├── <span class="dir">etc/</span><br>
+    &nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── rc.sh &nbsp;<span class="note">← script de arranque</span><br>
+    &nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── inittab, passwd, group, hosts…<br>
+    &nbsp;&nbsp;├── <span class="dir">lib/x86_64-linux-gnu/</span> &nbsp;<span class="note">← libc, libm, libresolv</span><br>
+    &nbsp;&nbsp;├── <span class="dir">lib64/</span> &nbsp;<span class="note">← ld-linux-x86-64.so.2</span><br>
+    &nbsp;&nbsp;├── <span class="dir">lib/modules/6.12.90+deb13-amd64/</span> &nbsp;<span class="note">← .ko de red</span><br>
+    &nbsp;&nbsp;├── <span class="dir">proc/</span>, <span class="dir">sys/</span>, <span class="dir">tmp/</span>, <span class="dir">mnt/</span><br>
+    &nbsp;&nbsp;└── init &nbsp;<span class="note">← symlink a bin/busybox</span>
+  </div>
+
+  <h3 id="s1-3">1.3 Librerías dinámicas y nodos de dispositivo</h3>
+  <p>BusyBox es un binario <em>dinámico</em> — requiere el linker y las librerías de C del sistema anfitrión. Se copian directamente desde <code>/lib64</code> y <code>/lib/x86_64-linux-gnu</code>. También se crean los nodos de dispositivo mínimos con <code>mknod</code>:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal — SMinPuerta</span>
+    <pre><code><span class="cm"># Linker dinámico y librerías</span>
+<span class="fn">cp</span> /lib64/ld-linux-x86-64.so.2                    SMinPuerta/lib64/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libc.so.6                SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libm.so.6                SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libresolv.so.2           SMinPuerta/lib/x86_64-linux-gnu/
+
+<span class="cm"># Nodos de dispositivo esenciales</span>
+<span class="fn">sudo mknod</span> -m 600 SMinPuerta/dev/console c 5 1
+<span class="fn">sudo mknod</span> -m 666 SMinPuerta/dev/null    c 1 3
+<span class="fn">sudo mknod</span> -m 666 SMinPuerta/dev/tty     c 5 0
+<span class="fn">sudo mknod</span> -m 666 SMinPuerta/dev/ptmx    c 5 2</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">terminal — SMinCliente</span>
+    <pre><code><span class="cm"># Linker dinámico y librerías</span>
+<span class="fn">cp</span> /lib64/ld-linux-x86-64.so.2                    SMinCliente/lib64/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libc.so.6                SMinCliente/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libm.so.6                SMinCliente/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libresolv.so.2           SMinCliente/lib/x86_64-linux-gnu/
+
+<span class="cm"># Nodos de dispositivo esenciales</span>
+<span class="fn">sudo mknod</span> -m 600 SMinCliente/dev/console c 5 1
+<span class="fn">sudo mknod</span> -m 666 SMinCliente/dev/null    c 1 3
+<span class="fn">sudo mknod</span> -m 666 SMinCliente/dev/tty     c 5 0
+<span class="fn">sudo mknod</span> -m 666 SMinCliente/dev/ptmx    c 5 2</code></pre>
+  </div>
+
+  <h3 id="s1-4">1.4 Módulos virtio del kernel</h3>
+  <p>En Debian 13, los módulos <code>virtio</code> y <code>virtio_pci</code> están compilados dentro del kernel (<code>CONFIG_VIRTIO=y</code>, built-in). Solo <code>virtio_net</code>, <code>failover</code> y <code>net_failover</code> existen como módulos externos. En Debian 13 los archivos <code>.ko</code> están comprimidos en formato XZ — se descomprimen al directorio de trabajo:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="cm"># Descomprimir al directorio de trabajo (sin modificar /lib/modules)</span>
+<span class="fn">xz</span> -dk /lib/modules/6.12.90+deb13-amd64/kernel/drivers/net/virtio_net.ko.xz \
+   --stdout > virtio_net.ko
+
+<span class="fn">xz</span> -dk /lib/modules/6.12.90+deb13-amd64/kernel/net/core/failover.ko.xz \
+   --stdout > failover.ko
+
+<span class="fn">xz</span> -dk /lib/modules/6.12.90+deb13-amd64/kernel/drivers/net/net_failover.ko.xz \
+   --stdout > net_failover.ko
+
+<span class="cm"># Copiar a SMinPuerta</span>
+<span class="fn">cp</span> virtio_net.ko   SMinPuerta/lib/modules/6.12.90+deb13-amd64/
+<span class="fn">cp</span> failover.ko     SMinPuerta/lib/modules/6.12.90+deb13-amd64/
+<span class="fn">cp</span> net_failover.ko SMinPuerta/lib/modules/6.12.90+deb13-amd64/
+
+<span class="cm"># Copiar a SMinCliente</span>
+<span class="fn">cp</span> virtio_net.ko   SMinCliente/lib/modules/6.12.90+deb13-amd64/
+<span class="fn">cp</span> failover.ko     SMinCliente/lib/modules/6.12.90+deb13-amd64/
+<span class="fn">cp</span> net_failover.ko SMinCliente/lib/modules/6.12.90+deb13-amd64/</code></pre>
+  </div>
+
+  <h3 id="s1-5">1.5 Instalación de BusyBox</h3>
+  <p>BusyBox provee todos los comandos del userspace (<code>sh</code>, <code>ip</code>, <code>insmod</code>, <code>getty</code>, <code>login</code>, etc.) en un solo binario. Se compila desde el código fuente con <code>make install</code>, que genera automáticamente los symlinks en <code>bin/</code>, <code>sbin/</code> y <code>usr/</code>:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">wget</span> https://busybox.net/downloads/busybox-1.38.0.tar.bz2
+<span class="fn">tar</span> -xjf busybox-1.38.0.tar.bz2
+<span class="fn">cd</span> busybox-1.38.0
+
+<span class="fn">make</span> menuconfig
+<span class="cm"># En Settings: "Build static binary" debe estar DESMARCADO (binario dinámico)</span>
+
+<span class="fn">make</span> -j$(nproc)
+
+<span class="cm"># Instalar en ambos sistemas (genera todos los symlinks automáticamente)</span>
+<span class="fn">make</span> install CONFIG_PREFIX=../SMinPuerta
+<span class="fn">make</span> install CONFIG_PREFIX=../SMinCliente
+<span class="fn">cd</span> ..</code></pre>
+  </div>
+  <p>El proceso <code>make install</code> crea el archivo <code>bin/busybox</code> y todos los enlaces simbólicos necesarios. Adicionalmente se crea el enlace <code>init</code> en la raíz de cada sistema, que es el punto de entrada que busca el kernel al montar el initrd:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cd</span> SMinPuerta  &amp;&amp; <span class="fn">ln</span> -sf bin/busybox init &amp;&amp; <span class="fn">cd</span> ..
+<span class="fn">cd</span> SMinCliente &amp;&amp; <span class="fn">ln</span> -sf bin/busybox init &amp;&amp; <span class="fn">cd</span> ..</code></pre>
+  </div>
+
+  <!-- S2 -->
+  <h2 id="s2">Sección 2: Configuración de los Sistemas Mínimos</h2>
+
+  <h3 id="s2-1">2.1 Archivos de usuarios</h3>
+  <p>Se definen dos usuarios: <code>root</code> y <code>moises</code>. Las contraseñas se almacenan como hashes SHA-512 directamente en <code>/etc/passwd</code>, sin usar <code>/etc/shadow</code>. Los hashes se generan con:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code>openssl passwd -6
+<span class="cm"># Escribir la contraseña cuando lo solicite. Copiar el hash resultante.</span></code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">etc/passwd</span>
+    <pre><code>root:<span class="st">$6$salt$hash_de_root</span>:0:0:root:/:/bin/ash
+daemon::1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin::2:2:bin:/bin:/usr/sbin/nologin
+moises:<span class="st">$6$salt$hash_de_moises</span>:1000:1000:Moises Sanchez,,,:/:/bin/ash</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">etc/group</span>
+    <pre><code>root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:
+tty:x:5:
+moises:x:1000:</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">etc/inittab</span>
+    <pre><code><span class="cm"># Ejecutar rc.sh al iniciar el sistema</span>
+::sysinit:/etc/rc.sh
+<span class="cm"># Terminal de login en tty1</span>
+::respawn:/sbin/getty 38400 tty1
+::ctrlaltdel:/sbin/reboot</code></pre>
+  </div>
+
+  <h3 id="s2-2">2.2 Script de arranque — Puerta (rc.sh)</h3>
+  <p>El archivo <code>/etc/rc.sh</code> es ejecutado por <code>init</code> al arrancar. Monta los sistemas de archivos virtuales, carga los módulos de red, habilita el reenvío de paquetes y configura las interfaces <code>eth0</code> (NAT) y <code>eth1</code> (red interna):</p>
+  <div class="code-wrap">
+    <span class="code-label">SMinPuerta/etc/rc.sh</span>
+    <pre><code><span class="cm">#!/bin/sh</span>
+<span class="fn">echo</span> <span class="st">"=== Iniciando Sistema Minimo Puerta ==="</span>
+<span class="kw">export</span> LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/lib
+
+<span class="fn">mount</span> -t proc none /proc
+<span class="fn">mount</span> -t sysfs none /sys
+<span class="fn">mount</span> -t devtmpfs none /dev
+
+<span class="fn">echo</span> <span class="st">"Instalando modulos de red..."</span>
+<span class="fn">cd</span> /lib/modules/6.12.90+deb13-amd64/
+<span class="fn">insmod</span> failover.ko
+<span class="fn">insmod</span> net_failover.ko
+<span class="fn">insmod</span> virtio_net.ko
+
+<span class="cm"># Habilitar reenvío de paquetes (indispensable para NAT)</span>
+<span class="fn">echo</span> 1 > /proc/sys/net/ipv4/ip_forward
+
+<span class="cm"># eth0 — NAT (Internet)</span>
+<span class="fn">ip</span> link set lo   up
+<span class="fn">ip</span> link set eth0 up
+<span class="fn">ip</span> addr add 10.0.2.15/24 dev eth0
+<span class="fn">ip</span> route add default via 10.0.2.2
+
+<span class="cm"># eth1 — Red interna</span>
+<span class="fn">ip</span> link set eth1 up
+<span class="fn">ip</span> addr add 192.168.10.1/24 dev eth1
+
+<span class="fn">echo</span> <span class="st">"=== Puerta lista ==="</span></code></pre>
+  </div>
+
+  <h3 id="s2-3">2.3 Script de arranque — Cliente (rc.sh)</h3>
+  <p>El Cliente tiene una sola interfaz (<code>eth0</code>) conectada a la red interna. No requiere IP forwarding ni configuración de NAT:</p>
+  <div class="code-wrap">
+    <span class="code-label">SMinCliente/etc/rc.sh</span>
+    <pre><code><span class="cm">#!/bin/sh</span>
+<span class="fn">echo</span> <span class="st">"=== Iniciando Sistema Minimo Cliente ==="</span>
+<span class="kw">export</span> LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/lib
+
+<span class="fn">mount</span> -t proc none /proc
+<span class="fn">mount</span> -t sysfs none /sys
+<span class="fn">mount</span> -t devtmpfs none /dev
+
+<span class="fn">echo</span> <span class="st">"Instalando modulos de red..."</span>
+<span class="fn">cd</span> /lib/modules/6.12.90+deb13-amd64/
+<span class="fn">insmod</span> failover.ko
+<span class="fn">insmod</span> net_failover.ko
+<span class="fn">insmod</span> virtio_net.ko
+
+<span class="cm"># eth0 — Red interna</span>
+<span class="fn">ip</span> link set lo   up
+<span class="fn">ip</span> link set eth0 up
+<span class="fn">ip</span> addr add 192.168.10.2/24 dev eth0
+<span class="fn">ip</span> route add default via 192.168.10.1
+
+<span class="fn">echo</span> <span class="st">"=== Cliente listo ==="</span></code></pre>
+  </div>
+
+  <h3 id="s2-4">2.4 Configuración de GRUB</h3>
+  <p>El parámetro <code>net.ifnames=0 biosdevname=0</code> es indispensable para que el kernel asigne los nombres clásicos <code>eth0</code>, <code>eth1</code> en lugar de los nombres predecibles modernos (<code>enp0s3</code>, <code>enp0s8</code>). El parámetro <code>root=/dev/ram0</code> indica al kernel que el sistema de archivos raíz es el initrd en RAM:</p>
+  <div class="code-wrap">
+    <span class="code-label">iso_puerta/boot/grub/grub.cfg</span>
+    <pre><code><span class="kw">menuentry</span> <span class="st">'Puerta NAT - Sistema Minimo'</span> {
+    <span class="fn">echo</span> <span class="st">'Loading Linux 6.12.90+deb13-amd64 ...'</span>
+    <span class="kw">linux</span>  /boot/vmlinuz-6.12.90+deb13-amd64 root=/dev/ram0 <span class="op">net.ifnames=0</span> <span class="op">biosdevname=0</span> quiet
+    <span class="kw">initrd</span> /boot/imagen.cpio.gz
+}</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">iso_cliente/boot/grub/grub.cfg</span>
+    <pre><code><span class="kw">menuentry</span> <span class="st">'Cliente - Sistema Minimo'</span> {
+    <span class="fn">echo</span> <span class="st">'Loading Linux 6.12.90+deb13-amd64 ...'</span>
+    <span class="kw">linux</span>  /boot/vmlinuz-6.12.90+deb13-amd64 root=/dev/ram0 <span class="op">net.ifnames=0</span> <span class="op">biosdevname=0</span> quiet
+    <span class="kw">initrd</span> /boot/imagen.cpio.gz
+}</code></pre>
+  </div>
+
+  <h3 id="s2-5">2.5 Scripts de generación de ISOs</h3>
+  <p>Basados en el script original (<code>haceImagen.sh</code>), se crean dos scripts independientes. La estructura es idéntica al original — empaquetado CPIO, compresión y llamada a <code>grub-mkrescue</code>:</p>
+  <div class="code-wrap">
+    <span class="code-label">hacePuerta.sh</span>
+    <pre><code>
+<span class="fn">cp</span> /boot/vmlinuz-$(uname -r) iso_puerta/boot/
+
+<span class="fn">cd</span> SMinPuerta
+<span class="fn">sudo find</span> . -print | <span class="fn">cpio</span> -o -v -H newc > ../imagen.cpio
+<span class="fn">cd</span> ..
+
+<span class="fn">rm</span> -f ./iso_puerta/boot/imagen.cpio.gz
+<span class="fn">mv</span> imagen.cpio iso_puerta/boot
+<span class="fn">gzip</span> ./iso_puerta/boot/imagen.cpio
+
+<span class="fn">rm</span> -f ImagenPuerta.iso
+<span class="fn">grub-mkrescue</span> -o ImagenPuerta.iso -d /usr/lib/grub/i386-pc iso_puerta
+<span class="fn">echo</span> <span class="st">"Ok!"</span></code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">haceCliente.sh</span>
+    <pre>
+<span class="fn">cp</span> /boot/vmlinuz-$(uname -r) iso_cliente/boot/
+
+<span class="fn">cd</span> SMinCliente
+<span class="fn">sudo find</span> . -print | <span class="fn">cpio</span> -o -v -H newc > ../imagen.cpio
+<span class="fn">cd</span> ..
+
+<span class="fn">rm</span> -f ./iso_cliente/boot/imagen.cpio.gz
+<span class="fn">mv</span> imagen.cpio iso_cliente/boot
+<span class="fn">gzip</span> ./iso_cliente/boot/imagen.cpio
+
+<span class="fn">rm</span> -f ImagenCliente.iso
+<span class="fn">grub-mkrescue</span> -o ImagenCliente.iso -d /usr/lib/grub/i386-pc iso_cliente
+<span class="fn">echo</span> <span class="st">"Ok!"</span></code></pre>
+  </div>
+
+  <!-- S3 -->
+  <h2 id="s3">Sección 3: Despliegue en VirtualBox</h2>
+  <p>Se crean dos máquinas virtuales en VirtualBox, configuradas para operar completamente en memoria RAM sin almacenamiento persistente.</p>
+  <table>
+    <thead><tr><th>Parámetro</th><th>Puerta</th><th>Cliente</th></tr></thead>
+    <tbody>
+      <tr><td>Nombre</td><td><code>SMinPuerta</code></td><td><code>SMinCliente</code></td></tr>
+      <tr><td>Tipo / Versión</td><td colspan="2">Linux / Debian (64-bit)</td></tr>
+      <tr><td>Memoria RAM</td><td>2048 MB</td><td>1024 MB</td></tr>
+      <tr><td>Disco duro</td><td colspan="2">Sin disco virtual (Live-RAM)</td></tr>
+      <tr><td>Adaptador 1</td><td>NAT — virtio-net</td><td>Red Interna <code>intnet</code> — virtio-net</td></tr>
+      <tr><td>Adaptador 2</td><td>Red Interna <code>intnet</code> — virtio-net</td><td>—</td></tr>
+      <tr><td>ISO</td><td><code>ImagenPuerta.iso</code></td><td><code>ImagenCliente.iso</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout info">
+    <div class="callout-title">Importante</div>
+    El nombre <code>intnet</code> debe ser exactamente igual en el Adaptador 2 de la Puerta y el Adaptador 1 del Cliente para que estén en el mismo switch virtual de VirtualBox.
+  </div>
+
+  <!-- S4 -->
+  <h2 id="s4">Sección 4: Pruebas y Resultados</h2>
+
+  <h3 id="s4-1">4.1 Sistema mínimo Puerta — login</h3>
+  <p>Al arrancar, el sistema ejecuta el <code>rc.sh</code>, carga los módulos virtio, configura las interfaces de red y presenta el prompt de login. El usuario <code>root</code> inicia sesión con la contraseña configurada en <code>/etc/passwd</code>.</p>
+
+  <img src="login_puerta.jpg" alt="Sistema mínimo Puerta — login activo en VirtualBox" class="img-frame">
+  <p class="img-caption">Fig. 1 — Sistema mínimo Puerta ejecutándose en VirtualBox con login activo.</p>
+
+  <h3 id="s4-2">4.2 Sistema mínimo Cliente — login</h3>
+  <p>El Cliente arranca con una sola interfaz <code>eth0</code> configurada en la red interna <code>192.168.10.2/24</code> con la Puerta como gateway por defecto.</p>
+
+  <img src="login_cliente.jpg" alt="Sistema mínimo Cliente — login activo en VirtualBox" class="img-frame">
+  <p class="img-caption">Fig. 2 — Sistema mínimo Cliente ejecutándose en VirtualBox con login activo.</p>
+
+  <h3 id="s4-3">4.3 Ping entre las dos máquinas</h3>
+  <p>Se verifica la conectividad de la red interna haciendo ping desde cada máquina hacia la otra. Los comandos ejecutados son:</p>
+  <div class="code-wrap">
+    <span class="code-label">desde la puerta</span>
+    <pre><code><span class="cm"># Verificar interfaces</span>
+ip addr show
+
+<span class="cm"># Ping al Cliente</span>
+<span class="fn">ping</span> -c 4 192.168.10.2</code></pre>
+  </div>
+  <div class="code-wrap">
+    <span class="code-label">desde el cliente</span>
+    <pre><code><span class="cm"># Verificar interfaz</span>
+ip addr show
+
+<span class="cm"># Ping a la Puerta</span>
+<span class="fn">ping</span> -c 4 192.168.10.1</code></pre>
+  </div>
+
+  <img src="ping_puerta.jpg" alt="Ping desde la Puerta al Cliente — 0% de pérdida" class="img-frame">
+  <p class="img-caption">Fig. 3 — Ping desde la Puerta (192.168.10.1) al Cliente (192.168.10.2) con 0% de pérdida.</p>
+
+  <img src="ping_cliente.jpg" alt="Ping desde el Cliente a la Puerta — 0% de pérdida" class="img-frame">
+  <p class="img-caption">Fig. 4 — Ping desde el Cliente (192.168.10.2) a la Puerta (192.168.10.1) con 0% de pérdida.</p>
+
+  <h3 id="s4-4">4.4 Resolución de nombres desde la Puerta</h3>
+  <p>Se verifica que la Puerta puede resolver nombres de dominio a través del servidor DNS de VirtualBox (<code>10.0.2.3</code>) y que tiene conectividad hacia Internet mediante el NAT.</p>
+  <div class="code-wrap">
+    <span class="code-label">desde la puerta</span>
+    <pre><code><span class="cm"># Ping a Internet</span>
+<span class="fn">ping</span> -c 4 8.8.8.8
+
+<span class="cm"># Resolución de nombres</span>
+<span class="fn">nslookup</span> google.com
+<span class="fn">nslookup</span> www.cinvestav.mx</code></pre>
+  </div>
+
+  <img src="ping_internet.jpg" alt="Ping a Internet y resolución DNS desde la Puerta" class="img-frame">
+  <p class="img-caption">Fig. 5 — Ping a <code>8.8.8.8</code> y resolución de nombres desde la Puerta usando DNS <code>10.0.2.3</code>.</p>
+
+  <p>Los resultados de todas las pruebas se resumen en la siguiente tabla. El código fuente completo (scripts de arranque, configuración de GRUB y scripts de generación de ISOs) puede descargarse a continuación:</p>
+  <a href="smin.tar" download class="download-btn">&#8595; Descargar código fuente (.tar)</a>
+  <table>
+    <thead><tr><th>Prueba</th><th>Origen</th><th>Destino</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Ping red interna</td><td>Puerta <code>eth1</code></td><td>Cliente <code>192.168.10.2</code></td><td>✓ 0% pérdida</td></tr>
+      <tr><td>Ping red interna</td><td>Cliente <code>eth0</code></td><td>Puerta <code>192.168.10.1</code></td><td>✓ 0% pérdida</td></tr>
+      <tr><td>Ping a Internet</td><td>Puerta <code>eth0</code></td><td><code>8.8.8.8</code></td><td>✓ 0% pérdida</td></tr>
+      <tr><td>Resolución DNS</td><td>Puerta</td><td><code>google.com</code>, <code>www.cinvestav.mx</code></td><td>✓ Resuelve correctamente</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<footer>
+  Cinvestav-IPN &nbsp;·&nbsp; Departamento de Computación &nbsp;·&nbsp; Seguridad en Cómputo &nbsp;·&nbsp; 2026
+</footer>
+
+</body>
+</html>

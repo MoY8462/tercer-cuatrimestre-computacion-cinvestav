@@ -1,0 +1,84 @@
+---
+title: "HPC III"
+author: "Moisés Alejandro Sánchez Vergara"
+date: "06-23-2026"
+header-includes: |
+  \usepackage{xcolor}
+  \definecolor{myorange}{HTML}{FF6600}
+  \usepackage{titlesec}
+  \titleformat{\section}{\normalfont\Large\bfseries\color{myorange}}{\thesection}{1em}{}
+  \titleformat{\subsection}{\normalfont\large\bfseries\color{myorange}}{\thesubsection}{1em}{}
+  \titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{myorange}}{\thesubsubsection}{1em}{}
+  \titleformat{\paragraph}{\normalfont\normalsize\bfseries\color{myorange}}{\theparagraph}{1em}{}
+format:
+  pdf: default
+---
+
+## Problema de valores propios
+
+$Ax = \lambda x$
+$A \in \mathbb{R}^{n\times n}$
+
+*A* es simétrica.
+
+$D \in \mathbb{R}^{n\times n}$
+
+$d \neq d_j$
+
+$Dx = \lambda x$
+
+$\lambda : \in {d_1, d_2, \ldots, d_n}$
+
+$A = PDP^{-1}$
+
+Se dice que dos matrices *A* y *D* $\in \mathbb{R}^{n\times n}$ no singulares, son similares si $\exists$ *P* $\in \mathbb{R}^{n\times n}$ invertible, tal que: 
+
+$A = PDP^{-1}$.
+
+Dos matrices similares A y D tienen los mismos valores propios.
+
+Suponga que $A \in \mathbb{R}^{n\times n}$ simétrica no singular. 
+
+Si $\exists$ la factorización:
+
+$A = QR$
+donde $Q,r \in \mathbb{R}^{n\times n}$, con $R$ triangular superior y $Q$ ortogonal.
+
+$A = QR$
+
+$Q^{-1}A = Q^{-1}QR = R$
+
+$Q^{-1}A=R$
+
+$Q^{-1}AQ = RQ$
+
+### Diagonaliza:
+
+**Entrada:** 
+
+>    A: Matriz cuadrada simetrica no singular de $n x n$
+
+**Salida:** 
+
+>    D: Matriz diagonal de $n x n$
+
+>    P: Matriz invertible de $n x n$ 
+
+```python
+{
+    D <- A
+    P <- 1
+    while (D no es diagonal) {
+        D -> Q * R (Factorización D) 
+        P <- P * Q
+        D <- R * Q
+    }
+
+    A = (P * D) * P^{-1}
+
+    Regresa P * D
+}
+```
+
+**Tarea:** Programa que diagonalice una matriz de 50x50, realizar en servidor
+

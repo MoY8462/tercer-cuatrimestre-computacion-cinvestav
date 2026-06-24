@@ -1,0 +1,133 @@
+---
+title: "Seguridad"
+header-includes: |
+  \usepackage{xcolor}
+  \definecolor{myorange}{HTML}{3D3DFF}
+  \usepackage{titlesec}
+  \titleformat{\section}{\normalfont\Large\bfseries\color{myorange}}{\thesection}{1em}{}
+  \titleformat{\subsection}{\normalfont\large\bfseries\color{myorange}}{\thesubsection}{1em}{}
+  \titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{myorange}}{\thesubsubsection}{1em}{}
+  \titleformat{\paragraph}{\normalfont\normalsize\bfseries\color{myorange}}{\theparagraph}{1em}{}
+format:
+  pdf: default
+---
+\thispagestyle{empty}
+\begin{center}
+\textsc{Centro de Investigación y de Estudios Avanzados}\\[0.5cm]
+\textsc{Maestría en Ciencias de la Computación}\\[2cm]
+\begin{center}
+\huge\bfseries Análisis de tráfico de red con Wireshark.
+\end{center}
+\vspace{2cm}
+{\Large \textbf{Alumno}}\\[0.3cm]
+{\normalsize \textbf{Moisés Alejandro Sánchez Vergara}}\\[0.3cm]
+{\Large \textbf{Profesora}}\\[0.3cm]
+{\normalsize \textbf{Dra. Brisbane Ovilla Martínez}}\\[2cm]
+24 de junio del 2026
+\end{center}
+\newpage
+
+## Introducción
+
+Este reporte documenta una práctica de análisis de tráfico de red utilizando
+**Wireshark**, con el objetivo de comprender, a un nivel práctico, cómo viaja
+la información dentro de una red local (LAN) y qué protocolos intervienen en
+el funcionamiento cotidiano de los dispositivos conectados.
+
+El ejercicio cubrió tres etapas:
+
+1. La instalación de Wireshark en un sistema Debian.
+2. La identificación del entorno de trabajo (sistema operativo, interfaces
+   de red disponibles, versión de la herramienta).
+3. La realización de capturas de tráfico en vivo sobre la interfaz Wi-Fi,
+   observando protocolos como mDNS, ARP, ICMPv6, TCP y TLS.
+
+## Instalación
+
+### Instalación del paquete
+
+Wireshark se instaló desde los repositorios oficiales de Debian:
+
+```bash
+sudo apt install wireshark
+```
+
+Esto incluyó los paquetes `wireshark`, `wireshark-common` y las bibliotecas
+de disección de protocolos (`libwireshark-data`, `libwireshark18`).
+
+
+## Ambiente
+
+| Componente | Detalle |
+|---|---|
+| Sistema operativo | Debian GNU/Linux 13 "trixie" |
+| Versión de Wireshark | 4.4.15 |
+| Usuario | `moises-sanchez` |
+| Interfaz Wi-Fi | `wlp2s0` |
+| Interfaz Ethernet | `eno1` |
+| Otras interfaces detectadas | `bluetooth0`, `Loopback: lo`, `any`, `nflog`, `nfqueue`, `dbus-system`, `dbus-session` |
+
+
+## Pruebas
+
+Se realizaron tres capturas en vivo sobre la interfaz `wlp2s0`, cada una con
+un nivel distinto de actividad de red.
+
+### Captura 1 — Tráfico en reposo (9 paquetes)
+
+Con la red en estado de baja actividad, el tráfico observado fue
+exclusivamente de descubrimiento de servicios y resolución de direcciones:
+
+- **mDNS**: múltiples *Standard query* repetidas preguntando por servicios
+  como `_ftp._tcp.local`, `_nfs._tcp.local` y `_sftp-ssh._tcp.local`,
+  típicas del protocolo Bonjour/Zeroconf usado por dispositivos para
+  anunciarse en la red sin configuración manual.
+- **ARP**: una solicitud `Who has 192.168.100.1? Tell 192.168.100.3` desde un
+  dispositivo identificado por el fabricante *HonorDevice*, buscando la
+  dirección MAC del gateway de la red.
+
+### Captura 2 — Tráfico mixto (310 paquetes)
+
+Con más actividad en la red, además del tráfico mDNS/ARP ya observado,
+aparecieron protocolos adicionales:
+
+- **mDNS con registros TXT y PTR**: respuestas con *cache flush* revelando
+  el nombre de host de un dispositivo (`iPhone-de-Moises.local`), lo que
+  ilustra cómo mDNS puede exponer información identificable sobre los
+  dispositivos de una LAN.
+- **ARP Gratuitous y ARP Announcement**: paquetes desde dispositivos Apple
+  anunciando proactivamente su propia dirección IP a la red (común tras
+  reconectarse o cambiar de IP).
+- **ICMPv6 Multicast Listener Report Message v2**: mensajes de control para
+  unirse a grupos multicast en IPv6.
+- **TLSv1.2 / TCP**: tráfico de aplicación cifrado entre el equipo local y
+  servidores externos vía IPv6, junto con confirmaciones (`ACK`) normales
+  del protocolo TCP.
+- **TCP Dup ACK**: confirmaciones duplicadas entre el host local y una IP
+  pública, típicas de pequeñas pérdidas o reordenamientos de paquetes en la
+  red.
+
+### Captura 3 — Sesión extendida (2672 paquetes, sin pérdida registrada)
+
+Esta fue la captura más prolongada, guardada como
+`wireshark_wlp2s0Z3OHR3.pcapng`, con 0.0% de paquetes perdidos según el
+indicador de Wireshark. Se observaron patrones más avanzados del ciclo de
+vida de una conexión TCP/TLS:
+
+- **Cierre ordenado de conexión**: una secuencia `[FIN, ACK]` en ambas
+  direcciones (puerto 443 ↔ 50450), correspondiente al cierre normal de una
+  sesión TLS.
+- **Paquetes `[RST]` resaltados en rojo**: tres paquetes de *reset* sobre la
+  misma conexión ya cerrada. Wireshark resalta los `RST` con su regla de
+  coloreado por defecto para tráfico TCP anómalo o de cierre forzado.
+- **ICMPv6 Neighbor Solicitation**: el equivalente en IPv6 a una solicitud
+  ARP, usado para resolver la dirección de capa de enlace de un vecino en
+  la red.
+- **Múltiples sesiones TLS simultáneas**: conexiones paralelas hacia varias
+  direcciones IP públicas (IPv4 e IPv6), reflejando el comportamiento normal
+  de apps y servicios que mantienen varias conexiones abiertas a la vez.
+- **`[TCP ACKed unseen segment]`**: aviso de Wireshark indicando que se
+  confirmó un segmento que no fue capturado — normal cuando la captura
+  comienza después de que una conexión ya estaba en curso.
+
+

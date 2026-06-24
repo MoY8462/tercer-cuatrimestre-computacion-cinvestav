@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarea 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #0f1720;
+    --muted: #41918D;
+    --accent: #41918D;
+    --card: #f7fbfd;
+    --code-bg: #f7fbfd;
+    /* derived */
+    --accent-dark: #2d6b68;
+    --border: #c8e0de;
+    --border-light: #deeeed;
+    --text-light: #4d7a77;
+    --note-bg: #eef7f6;
+    --warn-bg: #fdf6e3;
+    --warn-border: #c9a227;
+    --warn-title: #7a5c00;
+    --max-width: 860px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.78;
+    color: var(--fg);
+    background: var(--bg);
+  }
+
+  header {
+    border-bottom: 2px solid var(--border);
+    background: var(--card);
+    padding: 2rem 1.5rem 1.6rem;
+  }
+  .header-inner { max-width: var(--max-width); margin: 0 auto; }
+  header h1 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.3;
+    margin-bottom: 1.1rem;
+  }
+  .meta-table {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.2rem 1rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  .meta-table .label { font-weight: 700; color: var(--fg); }
+  hr.title-rule { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0 0; }
+
+  .page-wrap { max-width: var(--max-width); margin: 0 auto; padding: 2.2rem 1.5rem 4rem; }
+
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.2rem 1.6rem;
+    margin-bottom: 2.8rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+  }
+  nav.toc h2 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+    font-weight: 700;
+    border: none; padding: 0;
+  }
+  nav.toc ol { padding-left: 1.3rem; }
+  nav.toc li { margin: 0.28rem 0; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  nav.toc ol ol { margin-top: 0.2rem; padding-left: 1.1rem; }
+
+  h2 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.4rem; font-weight: 700;
+    margin: 2.8rem 0 0.9rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+  }
+  h3 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.1rem; font-weight: 600;
+    margin: 2rem 0 0.65rem;
+    color: var(--fg);
+  }
+
+  p { margin-bottom: 1.05rem; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  a { color: var(--accent); }
+  ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+  ul li { margin-bottom: 0.35rem; }
+
+  code {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.83em;
+    background: var(--code-bg);
+    padding: 0.12em 0.42em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--accent-dark);
+  }
+
+  .code-wrap { margin: 1rem 0 1.7rem; }
+  .code-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #fff;
+    background: var(--accent);
+    display: inline-block;
+    padding: 0.22em 0.85em;
+    border-radius: 4px 4px 0 0;
+    font-weight: 500;
+  }
+  pre {
+    background: #0d1f1e;
+    color: #ceecea;
+    border-radius: 0 6px 6px 6px;
+    padding: 1.1rem 1.4rem;
+    overflow-x: auto;
+    font-size: 0.83rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: inherit; color: inherit; }
+  .kw  { color: #6ddbd6; }
+  .cm  { color: #4a8a86; font-style: italic; }
+  .st  { color: #a8d8b0; }
+  .fn  { color: #90c8f0; }
+  .op  { color: #7ec8c4; }
+
+  .callout {
+    border-left: 4px solid var(--warn-border);
+    background: var(--warn-bg);
+    padding: 0.85rem 1.2rem;
+    margin: 1.2rem 0 1.6rem;
+    border-radius: 0 5px 5px 0;
+    font-size: 0.95rem;
+  }
+  .callout.info { border-color: var(--accent); background: var(--note-bg); }
+  .callout-title {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+    color: var(--warn-title);
+  }
+  .callout.info .callout-title { color: var(--accent-dark); }
+
+  .tree {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.83rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.3rem;
+    line-height: 1.95;
+    margin: 0.8rem 0 1.5rem;
+  }
+  .tree .dir  { color: var(--accent); font-weight: 600; }
+  .tree .note { color: var(--text-light); font-style: italic; }
+
+  table { width: 100%; border-collapse: collapse; font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; margin: 1rem 0 1.8rem; }
+  th { background: var(--card); font-weight: 700; text-align: left; padding: 0.58rem 0.9rem; border: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg); }
+  td { padding: 0.55rem 0.9rem; border: 1px solid var(--border-light); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--card); }
+
+  kbd { font-family: 'Source Code Pro', monospace; font-size: 0.82em; background: var(--card); border: 1px solid var(--border); border-radius: 3px; padding: 0.1em 0.4em; }
+
+  footer { border-top: 1px solid var(--border); margin-top: 3rem; padding: 1.5rem; text-align: center; font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem; color: var(--text-light); }
+
+  @media (max-width: 600px) {
+    body { font-size: 15.5px; }
+    header h1 { font-size: 1.3rem; }
+    pre { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Tarea 1: Hacer el disco ISO ejecutable con el núcleo de Linux y arrancarlo desde Virtualbox.</h1>
+    <div class="meta-table">
+      <span class="label">Estudiante:</span><span>Moisés Alejandro Sánchez Vergara</span>
+      <span class="label">Profesor:</span><span>Dr. Luis Gerardo De la Fraga</span>
+      <span class="label">Institución:</span><span>Cinvestav-IPN (Zacatenco)</span>
+      <span class="label">Materia:</span><span>Seguridad en Sistemas de Información</span>
+      <span class="label">Fecha:</span><span>18 de mayo de 2026</span>
+    </div>
+    <hr class="title-rule">
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <nav class="toc">
+    <h2>Tabla de Contenidos</h2>
+    <ol>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#entorno">Entorno de Trabajo</a></li>
+      <li><a href="#s1">Sección 1: Preparación del Entorno</a>
+        <ol>
+          <li><a href="#s1-1">Instalación de módulos GRUB para BIOS</a></li>
+          <li><a href="#s1-2">Estructura de directorios del proyecto</a></li>
+          <li><a href="#s1-3">Extracción del núcleo del sistema</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Sección 2: Configuración de GRUB y Automatización</a>
+        <ol>
+          <li><a href="#s2-1">Definición del menú de arranque</a></li>
+          <li><a href="#s2-2">Script de construcción de la imagen</a></li>
+          <li><a href="#s2-3">Generación de la imagen ISO</a></li>
+        </ol>
+      </li>
+      <li><a href="#s3">Sección 3: Despliegue en VirtualBox</a></li>
+      <li><a href="#s4">Sección 4: Resultados y Observaciones</a></li>
+    </ol>
+  </nav>
+
+  <!-- INTRO -->
+  <h2 id="intro">Introducción</h2>
+  <p>En esta tarea se construyó una imagen ISO arrancable de Linux desde cero, sin partir de ninguna distribución preexistente. El objetivo central fue comprender el proceso de arranque a bajo nivel: cómo el firmware BIOS entrega el control al cargador de arranque GRUB, y cómo éste localiza y transfiere la ejecución al núcleo del sistema operativo.</p>
+  <p>Para ello se extrajo el núcleo ejecutable comprimido (<code>vmlinuz</code>) del sistema Debian 13 instalado en el equipo anfitrión, se configuró manualmente el menú de GRUB, se empaquetó todo en una imagen ISO mediante <code>grub-mkrescue</code>, y finalmente se ejecutó dentro de una máquina virtual en VirtualBox. El resultado de esta primera etapa es intencionalmente un <em>Kernel Panic</em>, que confirma que el núcleo fue cargado y ejecutado correctamente, pero no encontró un sistema de archivos raíz — funcionalidad que se incorporará en etapas posteriores.</p>
+
+  <!-- ENTORNO -->
+  <h2 id="entorno">Entorno de Trabajo</h2>
+  <p>Se llevo a cabo sobre el siguiente entorno de software y hardware:</p>
+  <table>
+    <thead><tr><th>Parámetro</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Sistema operativo anfitrión</td><td>Debian 13 (Trixie) — arquitectura x86_64</td></tr>
+      <tr><td>Versión del kernel utilizado</td><td><code>6.12.86+deb13-amd64</code></td></tr>
+      <tr><td>Ruta de trabajo</td><td><code>/home/moises-sanchez/Documentos/Seguridad</code></td></tr>
+      <tr><td>Herramienta de virtualización</td><td>Oracle VirtualBox</td></tr>
+    </tbody>
+  </table>
+
+  <!-- S1 -->
+  <h2 id="s1">Sección 1: Preparación del Entorno</h2>
+
+  <h3 id="s1-1">1.1 Instalación de los módulos GRUB para arquitectura BIOS</h3>
+  <p>El sistema anfitrión opera con firmware UEFI, por lo que no incluye por defecto los módulos necesarios para generar sectores de arranque compatibles con BIOS (<code>i386-pc</code>). VirtualBox emula una máquina clásica con BIOS, por lo que se requirió instalar el paquete <code>grub-pc-bin</code>:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">sudo</span> apt update
+<span class="fn">sudo</span> apt install grub-pc-bin</code></pre>
+  </div>
+  <p>Esta instalación depositó los archivos de los módulos en <code>/usr/lib/grub/i386-pc/</code>, que son referenciados directamente al momento de construir la imagen ISO.</p>
+
+  <h3 id="s1-2">1.2 Creación de la estructura de directorios del proyecto</h3>
+  <p>Se definió un árbol de directorios dentro de la ruta de trabajo que sirve como raíz del sistema de archivos a empaquetar en la ISO. La herramienta <code>grub-mkrescue</code> espera encontrar la configuración del cargador en la ruta <code>boot/grub/grub.cfg</code> relativa a esa raíz:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cd</span> /home/moises-sanchez/Documentos/Seguridad
+<span class="fn">mkdir</span> -p iso/boot/grub</code></pre>
+  </div>
+  <p>Con esto quedó establecida la siguiente estructura base del proyecto:</p>
+  <div class="tree">
+    <span class="dir">Seguridad/</span><br>
+    &nbsp;&nbsp;├── <span class="dir">iso/</span> &nbsp;<span class="note">← raíz del contenido de la ISO</span><br>
+    &nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="dir">boot/</span><br>
+    &nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">grub/</span> &nbsp;<span class="note">← grub.cfg se colocará aquí</span><br>
+    &nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="note">vmlinuz-* (copiado en el siguiente paso)</span><br>
+    &nbsp;&nbsp;└── <span class="note">haceImagen.sh (creado en la sección 2)</span>
+  </div>
+
+  <h3 id="s1-3">1.3 Extracción del núcleo del sistema</h3>
+  <p>El archivo <code>vmlinuz</code> es el núcleo Linux en su forma ejecutable comprimida. Se reutilizó el kernel del propio sistema Debian 13 instalado en el anfitrión, copiándolo al directorio de construcción de la ISO:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cp</span> /boot/vmlinuz-6.12.86+deb13-amd64 \
+   /home/moises-sanchez/Documentos/Seguridad/iso/boot/</code></pre>
+  </div>
+  <p>El archivo ocupa aproximadamente 12 MB y contiene el núcleo comprimido. GRUB se encargará de descomprimirlo en memoria durante el proceso de arranque antes de transferirle la ejecución.</p>
+
+  <!-- S2 -->
+  <h2 id="s2">Sección 2: Configuración del Menú de GRUB y Automatización</h2>
+
+  <h3 id="s2-1">2.1 Definición del menú de arranque (grub.cfg)</h3>
+  <p>Se creó el archivo de configuración de GRUB, que define las entradas del menú de arranque y los parámetros que se pasan al núcleo. En esta primera etapa la configuración es mínima: una sola entrada que indica a GRUB la ruta del kernel y lo carga en modo solo lectura (<code>ro</code>):</p>
+  <div class="code-wrap">
+    <span class="code-label">iso/boot/grub/grub.cfg</span>
+    <pre><code><span class="cm">#</span>
+<span class="cm"># DO NOT EDIT THIS FILE</span>
+<span class="cm">#</span>
+<span class="cm"># It is automatically generated by grub-mkconfig using templates</span>
+<span class="cm"># from /etc/grub.d and settings from /etc/default/grub</span>
+<span class="cm">#</span>
+
+<span class="kw">menuentry</span> <span class="st">'Mi Sistema Minimo'</span> {
+    load_video
+    <span class="fn">echo</span> <span class="st">'Loading Linux 6.12.86+deb13-amd64 ...'</span>
+    <span class="kw">linux</span> /boot/vmlinuz-6.12.86+deb13-amd64 ro
+}</code></pre>
+  </div>
+
+
+
+  <h3 id="s2-2">2.2 Script de construcción de la imagen (haceImagen.sh)</h3>
+  <p>Para simplificar la reconstrucción de la ISO ante cualquier modificación futura, se elaboró un script de Bash que automatiza la invocación de <code>grub-mkrescue</code>. Esta herramienta toma el árbol de directorios <code>iso/</code> y genera una imagen ISO 9660 híbrida arrancable:</p>
+  <div class="code-wrap">
+    <span class="code-label">haceImagen.sh</span>
+    <pre><code><span class="cm">#!/bin/bash</span>
+<span class="fn">grub-mkrescue</span> <span class="op">-d</span> /usr/lib/grub/i386-pc <span class="op">-o</span> ImagenLinux.iso iso</code></pre>
+  </div>
+  <p>El parámetro <code>-d</code> apunta explícitamente a los módulos BIOS instalados previamente, garantizando la compatibilidad con la emulación de VirtualBox. El parámetro <code>-o</code> define el nombre del archivo de salida. Se otorgaron permisos de ejecución al script mediante:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">chmod</span> +x /home/moises-sanchez/Documentos/Seguridad/haceImagen.sh</code></pre>
+  </div>
+
+  <h3 id="s2-3">2.3 Generación de la imagen ISO</h3>
+  <p>Se ejecutó el script desde la raíz del proyecto. Internamente, <code>grub-mkrescue</code> delega la creación del sistema de archivos a <code>xorriso</code>, que además añade el sector de arranque híbrido BIOS/UEFI en los primeros 512 bytes de la imagen:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cd</span> /home/moises-sanchez/Documentos/Seguridad
+./haceImagen.sh</code></pre>
+  </div>
+  <p>La herramienta reportó la creación exitosa del archivo:</p>
+  <div class="code-wrap">
+    <span class="code-label">salida</span>
+    <pre><code>xorriso 1.5.6 : RockRidge filesystem manipulator, libburnia project.
+...
+xorriso : NOTE : Copying to System Area: 512 bytes from file
+          '/usr/lib/grub/i386-pc/boot_hybrid.img'
+ISO image produced: 10975 sectors
+Writing to 'stdio:ImagenLinux.iso' completed successfully.</code></pre>
+  </div>
+  <p>El archivo resultante <code>ImagenLinux.iso</code> de aproximadamente 22 MB quedó ubicado en la raíz del directorio de trabajo, listo para ser montado en la máquina virtual.</p>
+
+  <!-- S3 -->
+  <h2 id="s3">Sección 3: Despliegue en VirtualBox</h2>
+  <p>Se creó una nueva máquina virtual configurada para operar completamente en memoria RAM, sin almacenamiento persistente. La siguiente tabla resume los parámetros de hardware virtual asignados y su justificación:</p>
+  <table>
+    <thead><tr><th>Parámetro</th><th>Valor</th><th>Justificación</th></tr></thead>
+    <tbody>
+      <tr><td>Nombre</td><td><code>smin</code></td><td>Identificador del sistema mínimo</td></tr>
+      <tr><td>Tipo / Versión</td><td>Linux / Debian (64-bit)</td><td>Corresponde al kernel de 64 bits utilizado</td></tr>
+      <tr><td>Memoria RAM</td><td>2048 MB</td><td>Suficiente para esta etapa y las siguientes</td></tr>
+      <tr><td>Procesadores</td><td>1 CPU</td><td>Configuración mínima sin SMP</td></tr>
+      <tr><td>Disco duro</td><td>Sin disco virtual</td><td>El sistema opera en modo Live-RAM sin persistencia</td></tr>
+      <tr><td>Unidad óptica</td><td><code>ImagenLinux.iso</code></td><td>Única fuente de arranque del sistema</td></tr>
+    </tbody>
+  </table>
+  <p>La ISO fue asignada desde <strong>Configuración → Almacenamiento → Controlador IDE</strong>, seleccionando el archivo <code>/home/moises-sanchez/Documentos/Seguridad/ImagenLinux.iso</code>. Al iniciar la máquina, GRUB detectó correctamente la imagen y presentó el menú de arranque con la entrada <em>"Mi Sistema Minimo"</em>.</p>
+
+
+  <!-- S4 -->
+  <h2 id="s4">Sección 4: Resultados y Observaciones</h2>
+  <p>Al seleccionar la entrada del menú y presionar <kbd>Enter</kbd>, GRUB transfirió correctamente el control al núcleo. Se observó en pantalla la secuencia completa de inicialización: detección de CPU, enumeración de memoria, carga de controladores, inicialización del subsistema de seguridad y liberación de la memoria del initrd temporal.</p>
+  <p>Como resultado terminal, el sistema presentó el siguiente mensaje de Kernel Panic:</p>
+  <div class="code-wrap">
+    <span class="code-label">salida en virtualbox</span>
+    <pre><code>[  0.5xx] Kernel panic - not syncing: VFS: Unable to mount root fs
+           on unknown-block(0,0)</code></pre>
+  </div>
+
+  <br>
+  <img src="./screen_1.png" alt="sistema arrancado en VirtualBox mostrando el mensaje de Kernel Panic" style="max-width: 100%; border: 1px solid var(--border); border-radius: 6px; margin: 1.2rem 0;">
+  <br>
+
+  <br>
+  <img src="./screen_2.png" alt="detalle del mensaje de Kernel Panic con información del kernel y la arquitectura" style="max-width: 100%; border: 1px solid var(--border); border-radius: 6px; margin: 1.2rem 0;">
+  <br>
+
+
+
+
+</div>
+
+<footer>
+  Cinvestav-IPN &nbsp;·&nbsp; Departamento de Computación &nbsp;·&nbsp; Seguridad en Cómputo &nbsp;·&nbsp; 2026
+</footer>
+
+</body>
+</html>

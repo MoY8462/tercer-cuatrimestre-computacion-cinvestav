@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarea 3 — Cortafuegos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #0f1720;
+    --muted: #41918D;
+    --accent: #41918D;
+    --card: #f7fbfd;
+    --code-bg: #f7fbfd;
+    --accent-dark: #2d6b68;
+    --border: #c8e0de;
+    --border-light: #deeeed;
+    --text-light: #4d7a77;
+    --note-bg: #eef7f6;
+    --warn-bg: #fdf6e3;
+    --warn-border: #c9a227;
+    --warn-title: #7a5c00;
+    --max-width: 860px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.78;
+    color: var(--fg);
+    background: var(--bg);
+  }
+
+  header {
+    border-bottom: 2px solid var(--border);
+    background: var(--card);
+    padding: 2rem 1.5rem 1.6rem;
+  }
+  .header-inner { max-width: var(--max-width); margin: 0 auto; }
+  header h1 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.3;
+    margin-bottom: 1.1rem;
+  }
+  .meta-table {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.2rem 1rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  .meta-table .label { font-weight: 700; color: var(--fg); }
+  hr.title-rule { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0 0; }
+
+  .page-wrap { max-width: var(--max-width); margin: 0 auto; padding: 2.2rem 1.5rem 4rem; }
+
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.2rem 1.6rem;
+    margin-bottom: 2.8rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+  }
+  nav.toc h2 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+    font-weight: 700;
+    border: none; padding: 0;
+  }
+  nav.toc ol { padding-left: 1.3rem; }
+  nav.toc li { margin: 0.28rem 0; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  nav.toc ol ol { margin-top: 0.2rem; padding-left: 1.1rem; }
+
+  h2 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.4rem; font-weight: 700;
+    margin: 2.8rem 0 0.9rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+  }
+  h3 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.1rem; font-weight: 600;
+    margin: 2rem 0 0.65rem;
+    color: var(--fg);
+  }
+
+  p { margin-bottom: 1.05rem; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  a { color: var(--accent); }
+  ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+  ul li { margin-bottom: 0.35rem; }
+
+  code {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.83em;
+    background: var(--code-bg);
+    padding: 0.12em 0.42em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--accent-dark);
+  }
+
+  .code-wrap { margin: 1rem 0 1.7rem; }
+  .code-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #fff;
+    background: var(--accent);
+    display: inline-block;
+    padding: 0.22em 0.85em;
+    border-radius: 4px 4px 0 0;
+    font-weight: 500;
+  }
+  pre {
+    background: #0d1f1e;
+    color: #ceecea;
+    border-radius: 0 6px 6px 6px;
+    padding: 1.1rem 1.4rem;
+    overflow-x: auto;
+    font-size: 0.83rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: inherit; color: inherit; }
+  .kw  { color: #6ddbd6; }
+  .cm  { color: #4a8a86; font-style: italic; }
+  .st  { color: #a8d8b0; }
+  .fn  { color: #90c8f0; }
+  .op  { color: #7ec8c4; }
+  .hi  { color: #f0c070; }
+
+  .callout {
+    border-left: 4px solid var(--warn-border);
+    background: var(--warn-bg);
+    padding: 0.85rem 1.2rem;
+    margin: 1.2rem 0 1.6rem;
+    border-radius: 0 5px 5px 0;
+    font-size: 0.95rem;
+  }
+  .callout.info { border-color: var(--accent); background: var(--note-bg); }
+  .callout-title {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+    color: var(--warn-title);
+  }
+  .callout.info .callout-title { color: var(--accent-dark); }
+
+  .tree {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.83rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.3rem;
+    line-height: 1.95;
+    margin: 0.8rem 0 1.5rem;
+  }
+  .tree .dir  { color: var(--accent); font-weight: 600; }
+  .tree .note { color: var(--text-light); font-style: italic; }
+  .tree .new  { color: #c9a227; font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; margin: 1rem 0 1.8rem; }
+  th { background: var(--card); font-weight: 700; text-align: left; padding: 0.58rem 0.9rem; border: 1px solid var(--border); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg); }
+  td { padding: 0.55rem 0.9rem; border: 1px solid var(--border-light); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--card); }
+  .ok  { color: #1a7a3c; font-weight: 700; }
+  .err { color: #b0001e; font-weight: 700; }
+
+  .img-frame {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 1.2rem 0;
+    display: block;
+  }
+  .img-caption {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: -0.6rem;
+    margin-bottom: 1.6rem;
+    font-style: italic;
+  }
+  .img-placeholder {
+    width: 100%;
+    min-height: 200px;
+    background: var(--card);
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.2rem 0 0.4rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-light);
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .img-placeholder .ph-name {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  /* Diagrama SVG de topología */
+  .topology-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem;
+    margin: 1rem 0 1.8rem;
+    overflow-x: auto;
+  }
+
+  .download-list { list-style: none; padding: 0; margin: 1rem 0 1.8rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .download-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 1.1rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+  }
+  .download-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .download-info { flex: 1; }
+  .download-name { font-weight: 700; color: var(--fg); font-family: 'Source Code Pro', monospace; font-size: 0.85rem; }
+  .download-desc { color: var(--text-light); font-size: 0.83rem; margin-top: 0.1rem; }
+  .download-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.35em 0.9em;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .download-btn:hover { background: var(--accent-dark); color: #fff; }
+
+  footer { border-top: 1px solid var(--border); margin-top: 3rem; padding: 1.5rem; text-align: center; font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem; color: var(--text-light); }
+
+  @media (max-width: 600px) {
+    body { font-size: 15.5px; }
+    header h1 { font-size: 1.3rem; }
+    pre { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Tarea 3: Cortafuegos</h1>
+    <div class="meta-table">
+      <span class="label">Estudiante:</span><span>Moisés Alejandro Sánchez Vergara</span>
+      <span class="label">Profesor:</span><span>Dr. Luis Gerardo De la Fraga</span>
+      <span class="label">Institución:</span><span>Cinvestav-IPN (Zacatenco)</span>
+      <span class="label">Materia:</span><span>Seguridad en Sistemas de Información</span>
+      <span class="label">Fecha:</span><span>8 de junio de 2026</span>
+    </div>
+    <hr class="title-rule">
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <nav class="toc">
+    <h2>Tabla de Contenidos</h2>
+    <ol>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#entorno">Entorno de Trabajo</a></li>
+      <li><a href="#arquitectura">Arquitectura de la Red</a></li>
+      <li><a href="#s1">Sección 1: Integración de nftables en el Sistema Mínimo</a>
+        <ol>
+          <li><a href="#s1-1">Instalación de nftables en el anfitrión</a></li>
+          <li><a href="#s1-2">Copia del binario nft</a></li>
+          <li><a href="#s1-3">Librerías dinámicas requeridas</a></li>
+          <li><a href="#s1-4">Módulos del kernel y cadena de dependencias</a></li>
+          <li><a href="#s1-5">Archivo /etc/services</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Sección 2: Configuración del Cortafuegos</a>
+        <ol>
+          <li><a href="#s2-1">Análisis de FW.rules</a></li>
+          <li><a href="#s2-2">Script rc.sh actualizado de la Puerta</a></li>
+          <li><a href="#s2-3">Configuración de Sol y Luna</a></li>
+        </ol>
+      </li>
+      <li><a href="#s3">Sección 3: Despliegue en VirtualBox</a></li>
+      <li><a href="#s4">Sección 4: Pruebas y Resultados</a>
+        <ol>
+          <li><a href="#s4-1">Verificación del cortafuegos activo</a></li>
+          <li><a href="#s4-2">Servicios permitidos</a></li>
+          <li><a href="#s4-3">Servicios bloqueados</a></li>
+        </ol>
+      </li>
+      <li><a href="#descargas">Código Fuente</a></li>
+    </ol>
+  </nav>
+
+  <!-- ── INTRO ─────────────────────────────────────────────────────────── -->
+  <h2 id="intro">Introducción</h2>
+  <p>Esta tarea extiende los sistemas mínimos construidos en la Tarea 2 añadiendo un <strong>cortafuegos basado en nftables</strong>. El objetivo es comprender cómo se implementa el filtrado de paquetes en Linux a nivel de kernel, sin apoyarse en herramientas de configuración automática ni en distribuciones preconfiguradas.</p>
+  <p>La topología consiste en tres máquinas virtuales: una <em>Puerta</em> que actúa como gateway NAT y firewall, y dos máquinas clientes en la red interna denominadas <em>Sol</em> y <em>Luna</em>. Las reglas del cortafuegos, definidas en <code>FW.rules</code>, permiten únicamente los servicios SSH (22), HTTP (80), HTTPS (443) y DNS (53) desde la red interna hacia la Puerta. Todo el tráfico restante es descartado por política de denegación por defecto (<em>policy drop</em>).</p>
+
+  <!-- ── ENTORNO ────────────────────────────────────────────────────────── -->
+  <h2 id="entorno">Entorno de Trabajo</h2>
+  <table>
+    <thead><tr><th>Parámetro</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Sistema operativo anfitrión</td><td>Debian 13 (Trixie) — arquitectura x86_64</td></tr>
+      <tr><td>Versión del kernel</td><td><code>6.12.90+deb13-amd64</code></td></tr>
+      <tr><td>Ruta de trabajo</td><td><code>/home/moises-sanchez/Documentos/Seguridad_2</code></td></tr>
+      <tr><td>Herramienta de virtualización</td><td>Oracle VirtualBox</td></tr>
+      <tr><td>Userspace</td><td>BusyBox v1.38.0 (dinámico)</td></tr>
+      <tr><td>Motor de cortafuegos</td><td>nftables v1.0.x — módulo kernel <code>nf_tables.ko</code></td></tr>
+      <tr><td>Archivo de reglas</td><td><code>FW.rules</code> — tabla <code>ip global</code>, cuatro cadenas</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ── ARQUITECTURA ──────────────────────────────────────────────────── -->
+  <h2 id="arquitectura">Arquitectura de la Red</h2>
+  <p>La red se compone de tres máquinas virtuales. La Puerta tiene dos interfaces: <code>eth0</code> conectada a Internet mediante NAT de VirtualBox, y <code>eth1</code> conectada a la red interna privada <code>intnet</code>. Sol y Luna tienen únicamente <code>eth0</code> en la red interna y usan la Puerta como gateway y como servidor DNS.</p>
+
+  <figure style="text-align: center; margin: 1.5rem 0;">
+    <img src="topologia.png" alt="Topología de la red" style="max-width: 100%; height: auto; display: inline-block;" />
+    <figcaption>Figura 1. Topología de la red utilizada.</figcaption>
+  </figure>
+
+  
+
+  <table>
+    <thead><tr><th>Máquina</th><th>Interfaz</th><th>Dirección IP</th><th>Función</th></tr></thead>
+    <tbody>
+      <tr><td>Puerta</td><td><code>eth0</code></td><td><code>10.0.2.15/24</code></td><td>NAT — salida a Internet vía VirtualBox</td></tr>
+      <tr><td>Puerta</td><td><code>eth1</code></td><td><code>192.168.10.1/24</code></td><td>Gateway + firewall de la red interna</td></tr>
+      <tr><td>Sol</td><td><code>eth0</code></td><td><code>192.168.10.2/24</code></td><td>Cliente interno — red interna únicamente</td></tr>
+      <tr><td>Luna</td><td><code>eth0</code></td><td><code>192.168.10.3/24</code></td><td>Cliente interno — red interna únicamente</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ── S1: INTEGRACIÓN NFTABLES ─────────────────────────────────────── -->
+  <h2 id="s1">Sección 1: Integración de nftables en el Sistema Mínimo</h2>
+  <p>El sistema mínimo construido en la Tarea 2 no incluye ninguna herramienta de filtrado de paquetes. Para integrar <code>nftables</code> es necesario copiar manualmente cuatro tipos de componentes desde el sistema anfitrión: el binario <code>nft</code>, las librerías dinámicas de las que depende, los módulos del kernel (<code>.ko</code>) y el archivo <code>/etc/services</code> que permite a nft resolver nombres de servicio como <code>ssh</code> o <code>https</code>.</p>
+
+  <h3 id="s1-1">1.1 Instalación de nftables en el anfitrión</h3>
+  <p>Primero se instala nftables en el sistema Debian 13 anfitrión para disponer del binario y las librerías:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">sudo</span> apt update
+<span class="fn">sudo</span> apt install -y nftables
+
+<span class="cm"># Confirmar instalación</span>
+<span class="fn">which</span> nft           <span class="cm"># /sbin/nft</span>
+nft --version
+
+<span class="cm"># Ver todas las librerías que necesita el binario</span>
+<span class="fn">ldd</span> /sbin/nft</code></pre>
+  </div>
+
+  <h3 id="s1-2">1.2 Copia del binario nft y el script completo de integración</h3>
+  <p>La integración se divide en cinco pasos que deben ejecutarse como root desde el directorio <code>~/Documentos/Seguridad_2</code>. Cada paso transfiere un tipo distinto de componente al sistema mínimo de la Puerta.</p>
+
+  <p><strong>Paso 1 — Binario nft.</strong> Se copia el ejecutable <code>nft</code> desde <code>/sbin/</code> del anfitrión al directorio <code>sbin/</code> del sistema mínimo y se le otorgan permisos de ejecución. Este binario es la única interfaz de usuario para configurar y consultar el cortafuegos.</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cp</span> /sbin/nft SMinPuerta/sbin/nft
+<span class="fn">chmod</span> +x SMinPuerta/sbin/nft</code></pre>
+  </div>
+
+  <p><strong>Paso 2 — Librerías dinámicas.</strong> El binario <code>nft</code> está enlazado dinámicamente y requiere diez librerías que no están presentes en el sistema mínimo. Todas se copian al directorio <code>lib/x86_64-linux-gnu/</code> del sistema mínimo, que es la ruta que el cargador dinámico busca en tiempo de ejecución.</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cp</span> /lib/x86_64-linux-gnu/libnftables.so.1   SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libnftnl.so.11     SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libmnl.so.0        SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libjansson.so.4    SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libgmp.so.10       SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libedit.so.2       SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libbsd.so.0        SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libmd.so.0         SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libtinfo.so.6      SMinPuerta/lib/x86_64-linux-gnu/
+<span class="fn">cp</span> /lib/x86_64-linux-gnu/libxtables.so.12   SMinPuerta/lib/x86_64-linux-gnu/</code></pre>
+  </div>
+
+  <p><strong>Paso 3 — Módulos del kernel.</strong> nftables necesita once módulos cargados en el kernel. En el anfitrión Debian estos archivos están comprimidos con <code>.xz</code>, por lo que primero se copian y luego se descomprimen con <code>unxz</code> en el directorio de módulos del sistema mínimo. El orden de copia respeta la cadena de dependencias: <code>crc32c_generic</code> antes que <code>libcrc32c</code>, y todos los módulos base antes que <code>nf_tables</code>.</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="kw">cd</span> SMinPuerta/lib/modules/6.12.90+deb13-amd64
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/crypto/crc32c_generic.ko.xz        . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f crc32c_generic.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/lib/libcrc32c.ko.xz                . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f libcrc32c.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nfnetlink.ko.xz      . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nfnetlink.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko.xz . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nf_defrag_ipv4.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/ipv6/netfilter/nf_defrag_ipv6.ko.xz . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nf_defrag_ipv6.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nf_conntrack.ko.xz   . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nf_conntrack.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nf_nat.ko.xz         . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nf_nat.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nf_tables.ko.xz      . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nf_tables.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nft_ct.ko.xz         . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nft_ct.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nft_chain_nat.ko.xz  . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nft_chain_nat.ko.xz
+<span class="fn">cp</span> /lib/modules/6.12.90+deb13-amd64/kernel/net/netfilter/nft_masq.ko.xz       . <span class="op">&amp;&amp;</span> <span class="fn">unxz</span> -f nft_masq.ko.xz
+<span class="kw">cd</span> ~/Documentos/Seguridad_2</code></pre>
+  </div>
+
+  <p><strong>Paso 4 — Archivo <code>/etc/services</code>.</strong> nftables resuelve nombres de servicio como <code>ssh</code>, <code>http</code> o <code>domain</code> consultando este archivo en tiempo de ejecución. Sin él, el comando <code>nft -f /etc/FW.rules</code> falla al arrancar con el error <em>"No such file or directory"</em> al intentar parsear los nombres de puerto.</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cp</span> /etc/services SMinPuerta/etc/services</code></pre>
+  </div>
+
+  <p><strong>Paso 5 — Archivo de reglas.</strong> Se copia el archivo <code>FW.rules</code> al directorio <code>/etc/</code> del sistema mínimo. El <code>rc.sh</code> de la Puerta lo leerá durante el arranque mediante <code>nft -f /etc/FW.rules</code> para instalar todas las cadenas y reglas del cortafuegos.</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cp</span> FW.rules SMinPuerta/etc/FW.rules</code></pre>
+  </div>
+
+  <h3 id="s1-3">1.3 Librerías dinámicas requeridas</h3>
+  <p>El comando <code>ldd /sbin/nft</code> revela que el binario <code>nft</code> requiere diez librerías adicionales a las ya presentes en el sistema mínimo de la Tarea 2. Cada una cumple una función específica:</p>
+  <table>
+    <thead><tr><th>Librería</th><th>Función</th></tr></thead>
+    <tbody>
+      <tr><td><code>libnftables.so.1</code></td><td>Librería principal de nftables — parsing de reglas y comunicación con el kernel.</td></tr>
+      <tr><td><code>libnftnl.so.11</code></td><td>Abstracción de alto nivel sobre los mensajes netlink de nf_tables.</td></tr>
+      <tr><td><code>libmnl.so.0</code></td><td>Minimalist Netlink Library — comunicación de bajo nivel con el kernel.</td></tr>
+      <tr><td><code>libjansson.so.4</code></td><td>Biblioteca JSON — permite exportar e importar reglas en formato JSON.</td></tr>
+      <tr><td><code>libgmp.so.10</code></td><td>GNU Multiple Precision — manejo de grandes números en direcciones IPv6 y conjuntos.</td></tr>
+      <tr><td><code>libedit.so.2</code></td><td>Edición de línea interactiva — historial en modo interactivo de nft.</td></tr>
+      <tr><td><code>libbsd.so.0</code></td><td>Funciones BSD — dependencia de libedit.</td></tr>
+      <tr><td><code>libmd.so.0</code></td><td>Funciones de digest — dependencia de libbsd.</td></tr>
+      <tr><td><code>libtinfo.so.6</code></td><td>Información de terminal — dependencia de libedit.</td></tr>
+      <tr><td><code>libxtables.so.12</code></td><td>Compatibilidad con xtables (iptables legacy) — requerida por nft_compat.</td></tr>
+    </tbody>
+  </table>
+
+
+  <h3 id="s1-5">1.4 Archivo /etc/services</h3>
+  <p>El archivo <code>/etc/services</code> mapea nombres de servicio a números de puerto. nftables lo necesita para interpretar nombres como <code>ssh</code>, <code>domain</code>, <code>http</code> o <code>https</code> en las reglas. Sin este archivo, <code>nft -f /etc/FW.rules</code> falla con el error <em>"Could not process rule: No such file or directory"</em>.</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="fn">cp</span> /etc/services SMinPuerta/etc/services</code></pre>
+  </div>
+
+  <!-- ── S2: CONFIGURACIÓN ─────────────────────────────────────────────── -->
+  <h2 id="s2">Sección 2: Configuración del Cortafuegos</h2>
+
+  <h3 id="s2-1">2.1 Análisis de FW.rules</h3>
+  <p>El archivo <code>FW.rules</code> define una tabla <code>ip global</code> con cuatro cadenas. La estrategia es de <em>lista blanca</em>: todo el tráfico es descartado por defecto (<code>policy drop</code>) salvo el que coincide explícitamente con las reglas de aceptación.</p>
+  <div class="code-wrap">
+    <span class="code-label">FW.rules</span>
+    <pre><code><span class="fn">flush</span> ruleset
+
+<span class="kw">define</span> DEV_PRIVATE = eth1          <span class="cm"># red interna · 192.168.10.1</span>
+<span class="kw">define</span> DEV_WORLD   = eth0          <span class="cm"># NAT VirtualBox · 10.0.2.15</span>
+<span class="kw">define</span> NET_PRIVATE = 192.168.10.0/24
+
+<span class="kw">table</span> ip global {
+
+    <span class="cm"># Tráfico permitido desde Internet (actualmente ninguno)</span>
+    <span class="kw">chain</span> inbound_world { }
+
+    <span class="cm"># Tráfico permitido desde la red interna hacia la Puerta</span>
+    <span class="kw">chain</span> inbound_private {
+        <span class="hi">icmp type echo-request accept</span>
+        <span class="hi">tcp dport { ssh, domain, http, https } accept</span>
+        <span class="hi">udp dport { domain } accept</span>
+    }
+
+    <span class="cm"># Cadena principal — hook input (paquetes destinados a la Puerta)</span>
+    <span class="kw">chain</span> inbound {
+        type filter hook input priority 0; <span class="op">policy drop;</span>
+        ct state vmap { established : accept, related : accept, invalid : drop }
+        iifname vmap { lo : accept, $DEV_WORLD : jump inbound_world,
+                       $DEV_PRIVATE : jump inbound_private }
+    }
+
+    <span class="cm"># Cadena de tránsito — hook forward (paquetes que pasan por la Puerta)</span>
+    <span class="kw">chain</span> forward {
+        type filter hook forward priority 0; <span class="op">policy drop;</span>
+        ct state vmap { established : accept, related : accept, invalid : drop }
+        iifname $DEV_PRIVATE accept   <span class="cm"># la red interna puede salir a Internet</span>
+    }
+
+    <span class="cm"># NAT masquerade — cambia la IP origen de los paquetes salientes</span>
+    <span class="kw">chain</span> postrouting {
+        type nat hook postrouting priority 100; policy accept;
+        ip saddr $NET_PRIVATE oifname $DEV_WORLD masquerade
+    }
+}</code></pre>
+  </div>
+
+  <h3 id="s2-2">2.2 Script rc.sh actualizado de la Puerta</h3>
+  <p>El <code>rc.sh</code> de la Puerta se actualiza para cargar los módulos de nftables en el orden correcto y aplicar las reglas al final del arranque:</p>
+  <div class="code-wrap">
+    <span class="code-label">SMinPuerta/etc/rc.sh</span>
+    <pre><code><span class="kw">#!/bin/sh</span>
+<span class="fn">echo</span> <span class="st">"=== Iniciando Sistema Minimo Puerta ==="</span>
+<span class="kw">export</span> LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/lib
+
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+
+<span class="fn">echo</span> <span class="st">"Instalando modulos de red..."</span>
+<span class="kw">cd</span> /lib/modules/6.12.90+deb13-amd64/
+insmod failover.ko
+insmod net_failover.ko
+insmod virtio_net.ko
+
+<span class="fn">echo</span> 1 > /proc/sys/net/ipv4/ip_forward
+
+ip link set lo   up
+ip link set eth0 up
+ip addr add 10.0.2.15/24 dev eth0
+ip route add default via 10.0.2.2
+
+ip link set eth1 up
+ip addr add 192.168.10.1/24 dev eth1
+
+<span class="fn">echo</span> <span class="st">"Cargando modulos nftables..."</span>
+insmod /lib/modules/6.12.90+deb13-amd64/crc32c_generic.ko
+insmod /lib/modules/6.12.90+deb13-amd64/libcrc32c.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nfnetlink.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nf_defrag_ipv4.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nf_defrag_ipv6.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nf_conntrack.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nf_nat.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nf_tables.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nft_ct.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nft_chain_nat.ko
+insmod /lib/modules/6.12.90+deb13-amd64/nft_masq.ko
+
+<span class="fn">echo</span> <span class="st">"Aplicando cortafuegos..."</span>
+nft -f /etc/FW.rules
+
+<span class="fn">echo</span> <span class="st">"=== Puerta lista ==="</span></code></pre>
+  </div>
+
+  <h3 id="s2-3">2.3 Configuración de Sol y Luna</h3>
+  <p>Sol y Luna son los dos clientes de la red interna. Sus sistemas mínimos no ejecutan nftables; únicamente configuran su interfaz de red y apuntan a la Puerta como gateway y servidor DNS. Para poder usar el comando <code>nc</code> (netcat) en las pruebas de conectividad, se agrega el symlink correspondiente en <code>bin/</code>, dado que BusyBox lo incluye como applet pero no tenía el enlace creado:</p>
+  <div class="code-wrap">
+    <span class="code-label">terminal</span>
+    <pre><code><span class="cm"># Agregar symlink de nc en Sol y Luna</span>
+<span class="kw">cd</span> ~/Documentos/Seguridad_2/SMinSol/bin  <span class="op">&amp;&amp;</span>  ln -s busybox nc
+<span class="kw">cd</span> ~/Documentos/Seguridad_2/SMinLuna/bin <span class="op">&amp;&amp;</span>  ln -s busybox nc
+
+<span class="cm"># Regenerar ambos ISOs</span>
+<span class="kw">cd</span> ~/Documentos/Seguridad_2
+bash haceSol.sh
+bash haceLuna.sh</code></pre>
+  </div>
+
+  <p>El <code>rc.sh</code> de Sol asigna la IP <code>192.168.10.2/24</code> y el de Luna la IP <code>192.168.10.3/24</code>, con gateway y DNS en <code>192.168.10.1</code> (la Puerta) en ambos casos.</p>
+
+  <!-- ── S3: VIRTUALBOX ─────────────────────────────────────────────────── -->
+  <h2 id="s3">Sección 3: Despliegue en VirtualBox</h2>
+  <p>Se crean tres máquinas virtuales en VirtualBox. Es imprescindible que las tres compartan exactamente el mismo nombre de red interna (<code>intnet</code>), ya que VirtualBox distingue entre nombres de forma sensible a mayúsculas.</p>
+  <table>
+    <thead><tr><th>VM</th><th>ISO</th><th>Adaptador 1</th><th>Adaptador 2</th><th>RAM</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Puerta</strong></td><td><code>ImagenPuerta.iso</code></td><td>NAT · virtio-net</td><td>Red interna <code>intnet</code> · virtio-net</td><td>128 MB</td></tr>
+      <tr><td><strong>Sol</strong></td><td><code>ImagenSol.iso</code></td><td>Red interna <code>intnet</code> · virtio-net</td><td>—</td><td>128 MB</td></tr>
+      <tr><td><strong>Luna</strong></td><td><code>ImagenLuna.iso</code></td><td>Red interna <code>intnet</code> · virtio-net</td><td>—</td><td>128 MB</td></tr>
+    </tbody>
+  </table>
+
+  <img src="tres_vms_virtualbox.jpg" alt="Las tres VMs corriendo en VirtualBox" class="img-frame">
+  <p class="img-caption">Las tres VMs arrancadas: Puerta (con cortafuegos activo), Sol y Luna.</p>
+
+  <!-- ── S4: PRUEBAS ────────────────────────────────────────────────────── -->
+  <h2 id="s4">Sección 4: Pruebas y Resultados</h2>
+
+  <h3 id="s4-1">4.1 Verificación del cortafuegos activo</h3>
+  <p>Tras arrancar la Puerta, se verifica que las reglas de nftables se cargaron correctamente con el comando <code>nft list ruleset</code>:</p>
+
+  <img src="nft_list_ruleset.jpg" alt="Salida de nft list ruleset en la Puerta" class="img-frame">
+  <p class="img-caption">La Puerta muestra las cuatro cadenas de FW.rules activas: <code>inbound_world</code>, <code>inbound_private</code>, <code>inbound</code>, <code>forward</code> y <code>postrouting</code>.</p>
+
+  <p>Se comprueba también la conectividad básica con ping desde Sol y Luna hacia la Puerta y hacia Internet:</p>
+
+  <img src="ping_sol_puerta_internet.jpg" alt="Ping desde Sol hacia la Puerta e Internet" class="img-frame">
+  <p class="img-caption">Sol alcanza la Puerta (192.168.10.1) e Internet (8.8.8.8) — ICMP permitido y NAT funcionando.</p>
+
+  <img src="ping_luna_puerta.jpg" alt="Ping desde Luna hacia la Puerta" class="img-frame">
+  <p class="img-caption">Luna alcanza igualmente la Puerta con 0% de pérdida de paquetes.</p>
+
+  <h3 id="s4-2">4.2 Servicios permitidos</h3>
+  <p>Desde Sol y Luna se comprueba que los cuatro servicios habilitados en <code>inbound_private</code> son accesibles. Se usa <code>nc</code> (netcat de BusyBox) para intentar abrir una conexión TCP hacia cada puerto. Una respuesta inmediata de tipo <em>connection refused</em> confirma que el paquete atravesó el cortafuegos (no hay servicio escuchando en la Puerta, pero el firewall lo dejó pasar).</p>
+
+  <img src="prueba_ssh_abierto.jpg" alt="nc -z 192.168.10.1 22 — puerto SSH abierto" class="img-frame">
+  <p class="img-caption">Puerto 22 (SSH) — el cortafuegos permite el acceso desde la red interna.</p>
+
+  <img src="prueba_http_https.jpg" alt="nc -z 192.168.10.1 80 y nc -z 192.168.10.1 443" class="img-frame">
+  <p class="img-caption">Puertos 80 (HTTP) y 443 (HTTPS) — permitidos desde la red interna.</p>
+
+  <img src="prueba_dns.jpg" alt="nc -z 192.168.10.1 53 — puerto DNS abierto" class="img-frame">
+  <p class="img-caption">Puerto 53 (DNS) — permitido tanto por TCP como por UDP (<code>udp dport { domain } accept</code>).</p>
+
+  <h3 id="s4-3">4.3 Servicios bloqueados</h3>
+  <p>Se verifica que los servicios no incluidos en la lista blanca de <code>inbound_private</code> son descartados por la política <code>policy drop</code>. A diferencia de los puertos permitidos (respuesta inmediata), los bloqueados producen un timeout de varios segundos, evidencia clara del filtrado.</p>
+
+  <img src="bloqueo_telnet.jpg" alt="nc -z -w 3 192.168.10.1 23 — Telnet bloqueado" class="img-frame">
+  <p class="img-caption">Puerto 23 (Telnet) — timeout de 3 segundos, descartado por <code>policy drop</code>.</p>
+
+  <img src="bloqueo_ftp.jpg" alt="nc -z -w 3 192.168.10.1 21 — FTP bloqueado" class="img-frame">
+  <p class="img-caption">Puerto 21 (FTP) — bloqueado por el cortafuegos.</p>
+
+  <p>La siguiente tabla resume los resultados de todas las pruebas realizadas desde Sol y Luna:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Servicio</th>
+        <th>Puerto</th>
+        <th>Protocolo</th>
+        <th>Comando de prueba</th>
+        <th>Resultado esperado</th>
+        <th>Regla aplicada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ICMP (ping)</td>
+        <td>—</td>
+        <td>ICMP</td>
+        <td><code>ping -c 3 192.168.10.1</code></td>
+        <td><span class="ok">✓ Permitido</span></td>
+        <td><code>icmp type echo-request accept</code></td>
+      </tr>
+      <tr>
+        <td>SSH</td>
+        <td>22</td>
+        <td>TCP</td>
+        <td><code>nc -z 192.168.10.1 22</code></td>
+        <td><span class="ok">✓ Permitido</span></td>
+        <td><code>tcp dport { ssh } accept</code></td>
+      </tr>
+      <tr>
+        <td>DNS</td>
+        <td>53</td>
+        <td>TCP/UDP</td>
+        <td><code>nc -z 192.168.10.1 53</code></td>
+        <td><span class="ok">✓ Permitido</span></td>
+        <td><code>tcp/udp dport { domain } accept</code></td>
+      </tr>
+      <tr>
+        <td>HTTP</td>
+        <td>80</td>
+        <td>TCP</td>
+        <td><code>nc -z 192.168.10.1 80</code></td>
+        <td><span class="ok">✓ Permitido</span></td>
+        <td><code>tcp dport { http } accept</code></td>
+      </tr>
+      <tr>
+        <td>HTTPS</td>
+        <td>443</td>
+        <td>TCP</td>
+        <td><code>nc -z 192.168.10.1 443</code></td>
+        <td><span class="ok">✓ Permitido</span></td>
+        <td><code>tcp dport { https } accept</code></td>
+      </tr>
+      <tr>
+        <td>Telnet</td>
+        <td>23</td>
+        <td>TCP</td>
+        <td><code>nc -z -w 3 192.168.10.1 23</code></td>
+        <td><span class="err">✗ Bloqueado (drop)</span></td>
+        <td><code>policy drop</code> en chain inbound</td>
+      </tr>
+      <tr>
+        <td>FTP</td>
+        <td>21</td>
+        <td>TCP</td>
+        <td><code>nc -z -w 3 192.168.10.1 21</code></td>
+        <td><span class="err">✗ Bloqueado (drop)</span></td>
+        <td><code>policy drop</code> en chain inbound</td>
+      </tr>
+      <tr>
+        <td>SMTP</td>
+        <td>25</td>
+        <td>TCP</td>
+        <td><code>nc -z -w 3 192.168.10.1 25</code></td>
+        <td><span class="err">✗ Bloqueado (drop)</span></td>
+        <td><code>policy drop</code> en chain inbound</td>
+      </tr>
+      <tr>
+        <td>HTTP alternativo</td>
+        <td>8080</td>
+        <td>TCP</td>
+        <td><code>nc -z -w 3 192.168.10.1 8080</code></td>
+        <td><span class="err">✗ Bloqueado (drop)</span></td>
+        <td><code>policy drop</code> en chain inbound</td>
+      </tr>
+      <tr>
+        <td>MySQL</td>
+        <td>3306</td>
+        <td>TCP</td>
+        <td><code>nc -z -w 3 192.168.10.1 3306</code></td>
+        <td><span class="err">✗ Bloqueado (drop)</span></td>
+        <td><code>policy drop</code> en chain inbound</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+
+    Cuando un puerto está <strong>permitido</strong> por el firewall pero no hay ningún servicio escuchando en él, el sistema operativo responde con TCP RST (<em>connection refused</em>) de forma inmediata. Esto confirma que el paquete llegó a la Puerta y fue procesado. Cuando un puerto está <strong>bloqueado</strong> por <code>policy drop</code>, el paquete es descartado silenciosamente y la conexión queda en espera hasta el timeout configurado con <code>-w</code>. Esta diferencia de tiempo es la evidencia observable del filtrado.
+  </p>
+
+  <!-- ── DESCARGAS ──────────────────────────────────────────────────────── -->
+  <h2 id="descargas">Código Fuente</h2>
+  <p>Los archivos de configuración utilizados en esta tarea están disponibles para descarga. Corresponden exactamente al contenido mostrado en las secciones anteriores.</p>
+
+  <ul class="download-list">
+    <li class="download-item">
+      <span class="download-icon">&#x1F4DC;</span>
+      <div class="download-info">
+        <div class="download-name">cortafuegos.tar</div>
+      </div>
+      <a class="download-btn" href="cortafuegos.tar" download>Descargar</a>
+    </li>
+  </ul>
+
+</div><!-- /page-wrap -->
+
+<footer>
+  Moisés Alejandro Sánchez Vergara · Tarea 3: Cortafuegos · Seguridad en Sistemas de Información · Cinvestav-IPN · 2026
+</footer>
+
+</body>
+</html>
